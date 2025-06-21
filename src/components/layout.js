@@ -10,6 +10,7 @@ const Layout = ({ children }) => {
     <>
       <Header />
       <div
+        data-testid="content-wrapper"
         style={{
           maxWidth: `var(--size-content)`,
           padding: `var(--size-gutter)`,

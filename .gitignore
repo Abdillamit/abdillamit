@@ -1,6 +1,7 @@
 # Gatsby files
 .cache/
 public/
+coverage/
 
 # Node modules
 node_modules/

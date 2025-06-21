@@ -17,7 +17,16 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "prettier": "^2.8.8"
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "babel-jest": "^30.0.2",
+    "babel-preset-gatsby": "^3.14.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^30.0.2",
+    "jest-environment-jsdom": "^30.0.2",
+    "prettier": "^2.8.8",
+    "react-test-renderer": "^19.1.0"
   },
   "keywords": [
     "gatsby",
@@ -41,11 +50,14 @@
     "deploy:local": "npm run build:local && gatsby-plugin-s3 deploy --yes",
     "deploy:beta": "npm run build:beta && gatsby-plugin-s3 deploy --yes",
     "deploy:prod": "npm run build:prod && gatsby-plugin-s3 deploy --yes",
-    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:coverage:report": "jest --coverage && open-cli coverage/lcov-report/index.html",
+    "test:update": "jest --updateSnapshot"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/abdillamit/gatsby-aws-site"
   }
 }
-
