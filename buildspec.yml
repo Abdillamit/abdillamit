@@ -1,0 +1,40 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - echo "Installing dependencies..."
+      - npm install
+  pre_build:
+    commands:
+      - echo "Running Gatsby clean..."
+      - npm run clean
+      - echo "Setting GATSBY_ENVIRONMENT and NODE_ENV for build..."
+      - | 
+        if [ "$ENVIRONMENT" = "beta" ]; then
+          export GATSBY_ENVIRONMENT=beta
+          export NODE_ENV=production
+        elif [ "$ENVIRONMENT" = "prod" ]; then
+          export GATSBY_ENVIRONMENT=prod
+          export NODE_ENV=production
+        else
+          export GATSBY_ENVIRONMENT=local
+          export NODE_ENV=development
+        fi
+      - echo "GATSBY_ENVIRONMENT is $GATSBY_ENVIRONMENT"
+      - echo "NODE_ENV is $NODE_ENV"
+  build:
+    commands:
+      - echo "Building Gatsby project..."
+      - npm run build
+  post_build:
+    commands:
+      - echo "Build completed. Zipping artifacts..."
+artifacts:
+  files:
+    - '**/*'
+  base-directory: public
+  discard-paths: no
+

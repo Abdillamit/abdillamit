@@ -97,3 +97,141 @@ Looking for more guidance? Full documentation for Gatsby lives [on the website](
 The fastest way to combine your favorite tools and APIs to build the fastest sites, stores, and apps for the web. And also the best place to build, deploy, and host your Gatsby sites.
 
 <!-- AUTO-GENERATED-CONTENT:END -->
+
+# Gatsby.js Project with AWS S3 & CloudFront CI/CD
+
+This repository contains a Gatsby.js project configured for continuous integration and continuous deployment (CI/CD) to AWS S3 and CloudFront. It supports `local`, `beta`, and `prod` environments, each with its own dedicated S3 bucket and CloudFront distribution.
+
+## Project Structure
+
+```
+.github/
+├── workflows/           # GitHub Actions workflows for CI/CD
+│   ├── beta-deploy.yml
+│   └── prod-deploy.yml
+├── .gitignore           # Specifies intentionally untracked files to ignore
+├── gatsby-aws-project/  # Root directory for the Gatsby project
+│   ├── abdillamit-site/ # Gatsby.js project files
+│   │   ├── .env.development
+│   │   ├── .env.beta
+│   │   ├── .env.production
+│   │   ├── gatsby-config.js
+│   │   ├── package.json
+│   │   ├── src/
+│   │   │   └── pages/
+│   │   │       └── index.js
+│   │   └── ... (other Gatsby files)
+│   └── aws_s3_cloudfront_setup.md # Documentation for AWS S3 and CloudFront setup
+└── README.md            # This file
+```
+
+## Getting Started
+
+### Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+*   Node.js (LTS version recommended)
+*   npm (Node Package Manager)
+*   Gatsby CLI (`npm install -g gatsby-cli`)
+*   AWS CLI (configured with appropriate credentials)
+
+### Local Development
+
+1.  **Clone the repository:**
+
+    ```bash
+    git clone <your-repo-url>
+    cd gatsby-aws-project/abdillamit-site
+    ```
+
+2.  **Install dependencies:**
+
+    ```bash
+    npm install
+    ```
+
+3.  **Run the development server:**
+
+    ```bash
+    npm run develop:local
+    ```
+
+    This will start a local development server, typically at `http://localhost:8000`. The site will display "Hello Abdillamit" and indicate the `local` environment.
+
+### Building the Project
+
+To build the project for a specific environment, use the following commands:
+
+*   **Local build:**
+
+    ```bash
+    npm run build:local
+    ```
+
+*   **Beta build:**
+
+    ```bash
+    npm run build:beta
+    ```
+
+*   **Production build:**
+
+    ```bash
+    npm run build:prod
+    ```
+
+    These commands will generate static assets in the `public/` directory, configured for the respective environment.
+
+### Deploying to AWS S3 (Manual)
+
+Before deploying, ensure you have set up your AWS S3 buckets and CloudFront distributions as described in the `aws_s3_cloudfront_setup.md` document.
+
+To manually deploy to a specific environment (requires AWS credentials configured with `gatsby-plugin-s3` permissions):
+
+*   **Deploy to Local S3 bucket:**
+
+    ```bash
+    npm run deploy:local
+    ```
+
+*   **Deploy to Beta S3 bucket:**
+
+    ```bash
+    npm run deploy:beta
+    ```
+
+*   **Deploy to Production S3 bucket:**
+
+    ```bash
+    npm run deploy:prod
+    ```
+
+## AWS Setup
+
+Detailed instructions for setting up AWS S3 buckets and CloudFront distributions for each environment can be found in:
+
+*   [`aws_s3_cloudfront_setup.md`](./aws_s3_cloudfront_setup.md)
+
+**Important:** Ensure your S3 bucket names in `gatsby-config.js` match the actual bucket names created in AWS.
+
+## CI/CD with GitHub Actions
+
+This project uses GitHub Actions for automated CI/CD. Workflows are defined in the `.github/workflows/` directory. These workflows will:
+
+1.  Build the Gatsby.js project for the target environment.
+2.  Deploy the built assets to the corresponding AWS S3 bucket.
+3.  Invalidate the CloudFront cache for the deployed content.
+
+More details on setting up GitHub Actions and AWS credentials will be provided in subsequent sections.
+
+## Future Enhancements
+
+*   Integration with AWS CodePipeline and CodeBuild for more robust CI/CD.
+*   Adding backend services (e.g., AWS Lambda, API Gateway).
+*   Implementing more advanced Gatsby features and plugins.
+
+---
+
+*Authored by Manus AI*
+

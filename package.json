@@ -1,13 +1,15 @@
 {
-  "name": "gatsby-starter-default",
+  "name": "abdillamit-gatsby-site",
   "private": true,
-  "description": "A simple starter to get up and developing quickly with Gatsby",
-  "version": "0.1.0",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
+  "description": "Abdillamit's Gatsby site with AWS S3 deployment and CI/CD pipeline",
+  "version": "1.0.0",
+  "author": "Abdillamit Developer <developer@example.com>",
   "dependencies": {
+    "dotenv": "^16.5.0",
     "gatsby": "^5.14.1",
     "gatsby-plugin-image": "^3.14.0",
     "gatsby-plugin-manifest": "^5.14.0",
+    "gatsby-plugin-s3": "^0.4.1",
     "gatsby-plugin-sharp": "^5.14.0",
     "gatsby-source-filesystem": "^5.14.0",
     "gatsby-transformer-sharp": "^5.14.0",
@@ -18,23 +20,32 @@
     "prettier": "^2.8.8"
   },
   "keywords": [
-    "gatsby"
+    "gatsby",
+    "aws",
+    "s3",
+    "cicd",
+    "abdillamit"
   ],
-  "license": "0BSD",
+  "license": "MIT",
   "scripts": {
     "build": "gatsby build",
+    "build:local": "NODE_ENV=development GATSBY_ENVIRONMENT=local gatsby build",
+    "build:beta": "NODE_ENV=production GATSBY_ENVIRONMENT=beta gatsby build",
+    "build:prod": "NODE_ENV=production GATSBY_ENVIRONMENT=prod gatsby build",
     "develop": "gatsby develop",
+    "develop:local": "NODE_ENV=development GATSBY_ENVIRONMENT=local gatsby develop",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,css}\"",
     "start": "gatsby develop",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
+    "deploy:local": "npm run build:local && gatsby-plugin-s3 deploy --yes",
+    "deploy:beta": "npm run build:beta && gatsby-plugin-s3 deploy --yes",
+    "deploy:prod": "npm run build:prod && gatsby-plugin-s3 deploy --yes",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gatsbyjs/gatsby-starter-default"
-  },
-  "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby/issues"
+    "url": "https://github.com/abdillamit/gatsby-aws-site"
   }
 }
+

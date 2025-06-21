@@ -1,0 +1,60 @@
+name: Test and Build
+
+on:
+  push:
+    branches: [ main, master, beta, develop ]
+  pull_request:
+    branches: [ main, master, beta ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [16, 18, 20]
+        
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run tests
+      run: npm test
+      
+    - name: Build for local environment
+      run: npm run build:local
+      env:
+        GATSBY_ENVIRONMENT: local
+        NODE_ENV: development
+        
+    - name: Build for beta environment
+      run: npm run build:beta
+      env:
+        GATSBY_ENVIRONMENT: beta
+        NODE_ENV: production
+        
+    - name: Build for production environment
+      run: npm run build:prod
+      env:
+        GATSBY_ENVIRONMENT: prod
+        NODE_ENV: production
+        
+    - name: Check build artifacts
+      run: |
+        echo "Checking if build artifacts exist..."
+        ls -la public/
+        if [ ! -f "public/index.html" ]; then
+          echo "❌ index.html not found in build output"
+          exit 1
+        fi
+        echo "✅ Build artifacts verified"
+

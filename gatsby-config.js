@@ -4,15 +4,45 @@
  * See: https://www.gatsbyjs.com/docs/reference/config-files/gatsby-config/
  */
 
+require('dotenv').config({
+  path: `.env.${process.env.NODE_ENV}`,
+})
+
+const environment = process.env.GATSBY_ENVIRONMENT || 'local'
+
+// S3 bucket configurations for different environments
+const s3Configs = {
+  local: {
+    bucketName: 'abdillamit-site-local',
+    region: 'us-east-1',
+    protocol: 'https',
+    hostname: 'abdillamit-site-local.s3-website-us-east-1.amazonaws.com'
+  },
+  beta: {
+    bucketName: 'abdillamit-site-beta',
+    region: 'us-east-1', 
+    protocol: 'https',
+    hostname: 'abdillamit-site-beta.s3-website-us-east-1.amazonaws.com'
+  },
+  prod: {
+    bucketName: 'abdillamit-site-prod',
+    region: 'us-east-1',
+    protocol: 'https',
+    hostname: 'abdillamit-site-prod.s3-website-us-east-1.amazonaws.com'
+  }
+}
+
+const currentS3Config = s3Configs[environment] || s3Configs.local
+
 /**
  * @type {import('gatsby').GatsbyConfig}
  */
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Default Starter`,
-    description: `Kick off your next, great Gatsby project with this default starter. This barebones starter ships with the main Gatsby configuration files you might need.`,
-    author: `@gatsbyjs`,
-    siteUrl: `https://gatsbystarterdefaultsource.gatsbyjs.io/`,
+    title: `Hello Abdillamit - ${environment.toUpperCase()}`,
+    description: `Gatsby site for Abdillamit deployed on AWS S3 - ${environment} environment`,
+    author: `@abdillamit`,
+    siteUrl: `${currentS3Config.protocol}://${currentS3Config.hostname}`,
   },
   plugins: [
     `gatsby-plugin-image`,
@@ -28,16 +58,28 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `gatsby-starter-default`,
-        short_name: `starter`,
+        name: `Hello Abdillamit Site`,
+        short_name: `Abdillamit`,
         start_url: `/`,
         background_color: `#663399`,
-        // This will impact how browsers show your PWA/website
-        // https://css-tricks.com/meta-theme-color-and-trickery/
-        // theme_color: `#663399`,
+        theme_color: `#663399`,
         display: `minimal-ui`,
-        icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
+        icon: `src/images/gatsby-icon.png`,
+      },
+    },
+    {
+      resolve: `gatsby-plugin-s3`,
+      options: {
+        bucketName: currentS3Config.bucketName,
+        region: currentS3Config.region,
+        protocol: currentS3Config.protocol,
+        hostname: currentS3Config.hostname,
+        acl: null,
+        generateRedirectObjectsForPermanentRedirects: true,
+        generateIndexPageForRedirect: true,
+        generateMatchPathRewrites: false,
       },
     },
   ],
 }
+
