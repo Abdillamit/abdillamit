@@ -24,7 +24,7 @@ describe("IndexPage", () => {
     expect(getByTestId("mock-layout")).toBeInTheDocument()
     
     // Проверяем, что заголовок отображается
-    expect(getByText("Hello Abdillamit")).toBeInTheDocument()
+    expect(getByText("Hello World")).toBeInTheDocument()
   })
 
   it("renders Head component with correct title", () => {
