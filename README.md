@@ -1,14 +1,14 @@
 <h1 align="center">Hey there, I'm Abdillamit 👋</h1>
 
 <p align="center">
-  💻 Full-Stack & Mobile Developer • 🇰🇬 Kyrgyzstan • 🚀 Future Googler
+  💻 Software Engineer  • 🇰🇬 Kyrgyzstan • 🚀 Future Googler
 </p>
 
 ---
 
 ### 👨‍💻 About Me
 
-- 🔭 I'm a Software Engineer with 10+ months of hands-on experience in scalable front-end development
+- 🔭 I'm a Software Engineer with 1+ year of hands-on experience in scalable front-end development
 - 💡 Skilled in **React**, **TypeScript**, **Node.js**, **Flutter**, and **AWS**
 - 🌱 Always learning: Data Structures, Algorithms, CS fundamentals, and AI
 - 🎯 Goal: Grow into a full-stack developer, build impactful projects, and secure a position at a top tech company
