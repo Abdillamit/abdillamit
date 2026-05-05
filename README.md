@@ -8,7 +8,7 @@
 
 ### 👨‍💻 About Me
 
-- 🔭 I'm a Software Engineer with 1,5+ year of hands-on experience in scalable front-end development
+- 🔭 I'm a Software Engineer with 2+ year of hands-on experience in scalable front-end development
 - 💡 Skilled in **React**, **TypeScript**, **Node.js**, **Flutter**, and **AWS**
 - 🌱 Always learning: Data Structures, Algorithms, CS fundamentals, and AI
 - 🎯 Goal: Grow into a full-stack developer, build impactful projects, and secure a position at a top tech company
