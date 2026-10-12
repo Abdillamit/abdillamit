@@ -1,38 +1,60 @@
 import React from "react"
-import { render } from "@testing-library/react"
+import { render, screen } from "@testing-library/react"
 import IndexPage, { Head } from "../index"
+import RuPage, { Head as RuHead } from "../ru"
 
-// Мокаем компоненты, чтобы изолировать тест IndexPage
+// Isolate the pages from Layout and Seo
 jest.mock("../../components/layout", () => {
-  return function MockLayout({ children }) {
-    return <div data-testid="mock-layout">{children}</div>
+  return function MockLayout({ lang, children }) {
+    return (
+      <div data-testid="mock-layout" data-lang={lang}>
+        {children}
+      </div>
+    )
   }
 })
 
-// Мокаем SEO компонент
 jest.mock("../../components/seo", () => {
-  return function MockSEO({ title }) {
-    return <title data-testid="mock-seo">{title}</title>
+  return function MockSEO({ title, lang, path }) {
+    return (
+      <title data-testid="mock-seo" data-lang={lang} data-path={path}>
+        {title}
+      </title>
+    )
   }
 })
 
-describe("IndexPage", () => {
-  it("renders heading correctly", () => {
-    const { getByText, getByTestId } = render(<IndexPage />)
-    
-    // Проверяем, что Layout используется
-    expect(getByTestId("mock-layout")).toBeInTheDocument()
-    
-    // Проверяем, что заголовок отображается
-    expect(getByText("Hello World")).toBeInTheDocument()
+describe("English page", () => {
+  it("renders the CV in English", () => {
+    render(<IndexPage />)
+
+    expect(screen.getByTestId("mock-layout")).toHaveAttribute("data-lang", "en")
+    expect(screen.getByRole("heading", { level: 2, name: "Experience" })).toBeInTheDocument()
   })
 
-  it("renders Head component with correct title", () => {
-    const { getByTestId } = render(<Head />)
-    
-    // Проверяем, что SEO компонент используется с правильным заголовком
-    const seo = getByTestId("mock-seo")
-    expect(seo).toBeInTheDocument()
-    expect(seo.textContent).toBe("Hello Abdillamit")
+  it("passes English metadata to Seo", () => {
+    render(<Head />)
+
+    const seo = screen.getByTestId("mock-seo")
+    expect(seo).toHaveTextContent("Abdillamit Mamytov, Full Stack Software Engineer")
+    expect(seo).toHaveAttribute("data-lang", "en")
+    expect(seo).toHaveAttribute("data-path", "/")
+  })
+})
+
+describe("Russian page", () => {
+  it("renders the CV in Russian", () => {
+    render(<RuPage />)
+
+    expect(screen.getByTestId("mock-layout")).toHaveAttribute("data-lang", "ru")
+    expect(screen.getByRole("heading", { level: 2, name: "Опыт работы" })).toBeInTheDocument()
+  })
+
+  it("passes Russian metadata to Seo", () => {
+    render(<RuHead />)
+
+    const seo = screen.getByTestId("mock-seo")
+    expect(seo).toHaveAttribute("data-lang", "ru")
+    expect(seo).toHaveAttribute("data-path", "/ru/")
   })
 })

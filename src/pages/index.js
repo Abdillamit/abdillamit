@@ -1,17 +1,25 @@
-// External dependencies
 import * as React from "react"
 
-// Local dependencies
 import Layout from "../components/layout"
 import Seo from "../components/seo"
+import CvPage from "../components/cv-page"
+import { cv } from "../data/cv"
+
+const content = cv.en
 
 const IndexPage = () => (
-  <Layout>
-    <h1>Hello World</h1>
+  <Layout lang={content.lang} ui={content.ui} name={content.name}>
+    <CvPage content={content} />
   </Layout>
 )
 
-export const Head = () => <Seo title="Hello Abdillamit" />
+export const Head = () => (
+  <Seo
+    lang={content.lang}
+    path={content.path}
+    title={content.meta.title}
+    description={content.meta.description}
+  />
+)
 
 export default IndexPage
-

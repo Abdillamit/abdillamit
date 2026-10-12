@@ -1,25 +1,27 @@
-// External dependencies
 import * as React from "react"
 
-// Local dependencies
 import Header from "./header"
-import "./layout.css"
+import { updated } from "../data/cv"
+import { formatDay } from "./format-day"
+import "../styles/site.css"
 
-const Layout = ({ children }) => {
-  return (
-    <>
-      <Header />
-      <div
-        data-testid="content-wrapper"
-        style={{
-          maxWidth: `var(--size-content)`,
-          padding: `var(--size-gutter)`,
-        }}
-      >
-        {children}
-      </div>
-    </>
-  )
-}
+const Layout = ({ lang = "en", ui = {}, name = "Abdillamit Mamytov", children }) => (
+  <div className="page">
+    <a className="skip-link" href="#content">
+      {ui.skipLink || "Skip to content"}
+    </a>
+    <Header lang={lang} label={ui.languageNav} />
+    <main id="content" data-testid="content-wrapper">
+      {children}
+    </main>
+    <footer className="site-footer">
+      <span>{name}</span>
+      <span>
+        {ui.updated || "Updated"}{" "}
+        <time dateTime={updated}>{formatDay(updated)}</time>
+      </span>
+    </footer>
+  </div>
+)
 
 export default Layout

@@ -39,9 +39,9 @@ const currentS3Config = s3Configs[environment] || s3Configs.local
  */
 module.exports = {
   siteMetadata: {
-    title: `Hello Abdillamit - ${environment.toUpperCase()}`,
-    description: `Gatsby site for Abdillamit deployed on AWS S3 - ${environment} environment`,
-    author: `@abdillamit`,
+    title: `Abdillamit Mamytov, Full Stack Software Engineer`,
+    description: `Full Stack engineer in Bishkek with 2+ years of commercial experience in fintech and logistics: React, TypeScript, GraphQL, Node.js, AWS serverless.`,
+    author: `Abdillamit Mamytov`,
     siteUrl: `${currentS3Config.protocol}://${currentS3Config.hostname}`,
   },
   plugins: [
@@ -58,13 +58,13 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `Hello Abdillamit Site`,
+        name: `Abdillamit Mamytov`,
         short_name: `Abdillamit`,
         start_url: `/`,
-        background_color: `#663399`,
-        theme_color: `#663399`,
+        background_color: `#ffffff`,
+        theme_color: `#000000`,
         display: `minimal-ui`,
-        icon: `src/images/gatsby-icon.png`,
+        icon: `src/images/icon.png`,
       },
     },
     {

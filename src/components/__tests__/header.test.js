@@ -1,25 +1,37 @@
 import React from "react"
-import { render } from "@testing-library/react"
+import { render, screen } from "@testing-library/react"
 import Header from "../header"
 
 describe("Header component", () => {
-  it("renders correctly", () => {
-    const { getByAltText } = render(<Header />)
-    
-    // Проверяем, что логотип Gatsby отображается
-    expect(getByAltText("Gatsby logo")).toBeInTheDocument()
+  it("marks English as current on the English page", () => {
+    render(<Header lang="en" label="Language" />)
+
+    const current = screen.getByText("English")
+    expect(current.tagName).toBe("SPAN")
+    expect(current).toHaveAttribute("aria-current", "page")
+
+    const other = screen.getByRole("link", { name: "Русский" })
+    expect(other).toHaveAttribute("href", "/ru/")
+    expect(other).toHaveAttribute("hrefLang", "ru")
   })
-  
-  it("has the correct styling", () => {
-    const { container } = render(<Header />)
-    
-    // Проверяем, что header имеет правильные стили
-    const header = container.querySelector("header")
-    expect(header).toHaveStyle({
-      padding: "var(--space-4) var(--size-gutter)",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-    })
+
+  it("links back to English from the Russian page", () => {
+    render(<Header lang="ru" label="Язык" />)
+
+    expect(screen.getByRole("navigation", { name: "Язык" })).toBeInTheDocument()
+    expect(screen.getByText("Русский")).toHaveAttribute("aria-current", "page")
+    expect(screen.getByRole("link", { name: "English" })).toHaveAttribute(
+      "href",
+      "/"
+    )
+  })
+
+  it("falls back to English and a default label", () => {
+    render(<Header />)
+
+    expect(
+      screen.getByRole("navigation", { name: "Language" })
+    ).toBeInTheDocument()
+    expect(screen.getByText("English")).toHaveAttribute("aria-current", "page")
   })
 })
