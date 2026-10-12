@@ -1,9 +1,9 @@
 {
   "name": "abdillamit-gatsby-site",
   "private": true,
-  "description": "Abdillamit's Gatsby site with AWS S3 deployment and CI/CD pipeline",
+  "description": "Personal CV site of Abdillamit Mamytov (Gatsby, RU/EN) with AWS S3 + CloudFront deployment and CI/CD",
   "version": "1.0.0",
-  "author": "Abdillamit Developer <developer@example.com>",
+  "author": "Abdillamit Mamytov",
   "dependencies": {
     "dotenv": "^16.5.0",
     "gatsby": "^5.14.1",
@@ -58,6 +58,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/abdillamit/gatsby-aws-site"
+    "url": "https://github.com/Abdillamit/abdillamit"
   }
 }

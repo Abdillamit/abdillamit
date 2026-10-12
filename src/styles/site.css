@@ -1,0 +1,359 @@
+/*
+ * Abdillamit Mamytov — CV site
+ *
+ * The page is set like the LaTeX CV it comes from: Computer Modern
+ * (CMU Serif) with real small caps, black ink on white paper, a thin
+ * rule under each section title and dates set flush right.
+ */
+
+@font-face {
+  font-family: "CMU Serif";
+  src: url("/fonts/cmunrm.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "CMU Serif";
+  src: url("/fonts/cmunti.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "CMU Serif";
+  src: url("/fonts/cmunbx.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --ink: #000000;
+  --paper: #ffffff;
+  --font-serif: "CMU Serif", "Latin Modern Roman", "Computer Modern Serif",
+    Georgia, "Times New Roman", serif;
+
+  --step-small: 0.875rem;
+  --step-base: 1rem;
+  --step-section: 1.375rem;
+  --step-name: clamp(2.4rem, 9vw, 3.75rem);
+
+  --measure: 46rem;
+  --gutter: 1rem;
+  --rule: 1px solid var(--ink);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 112.5%;
+  -webkit-text-size-adjust: 100%;
+  background: var(--paper);
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: var(--step-base);
+  line-height: 1.55;
+  font-kerning: normal;
+  font-variant-numeric: lining-nums;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* Links and focus */
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+a:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--paper);
+  border: var(--rule);
+}
+
+.skip-link:focus {
+  left: var(--gutter);
+}
+
+/* Page frame */
+
+.page {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.site-header {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  font-size: var(--step-small);
+}
+
+.language-switch {
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  margin-top: 3rem;
+  padding: 1rem 0 2rem;
+  font-size: var(--step-small);
+}
+
+/* Head of the CV */
+
+.cv-head {
+  margin: 2.5rem 0 1.5rem;
+  text-align: center;
+}
+
+.cv-name {
+  margin: 0 0 0.5rem;
+  font-size: var(--step-name);
+  font-weight: 400;
+  font-variant-caps: small-caps;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+}
+
+.cv-role,
+.cv-contacts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.15rem 1.5em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cv-role {
+  margin-bottom: 0.35rem;
+}
+
+/* Sections */
+
+.cv-section h2 {
+  margin: 2.25rem 0 0.75rem;
+  padding-bottom: 0.1rem;
+  border-bottom: var(--rule);
+  font-size: var(--step-section);
+  font-weight: 400;
+  font-variant-caps: small-caps;
+  line-height: 1.25;
+}
+
+.cv-section p {
+  margin: 0;
+}
+
+.entries {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.entry + .entry {
+  margin-top: 1.1rem;
+}
+
+.entry-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "name place"
+    "sub date";
+  column-gap: 1.5rem;
+  align-items: baseline;
+}
+
+.entry-name {
+  grid-area: name;
+  margin: 0;
+  font-size: var(--step-base);
+  font-weight: 700;
+}
+
+.entry-sub {
+  grid-area: sub;
+  font-style: italic;
+}
+
+.entry-place {
+  grid-area: place;
+  text-align: right;
+}
+
+.entry-date {
+  grid-area: date;
+  text-align: right;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.is-italic {
+  font-style: italic;
+}
+
+.entry-stack {
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+/* Bullet lists, with the same markers as the CV */
+
+.items {
+  margin: 0.35rem 0 0;
+  padding-left: 1.4rem;
+  list-style-type: "\25E6\2002";
+  hyphens: auto;
+}
+
+.items--skills {
+  margin-top: 0;
+  list-style-type: "\2022\2002";
+}
+
+.items li + li {
+  margin-top: 0.3rem;
+}
+
+.not-found {
+  margin: 4rem 0;
+  text-align: center;
+}
+
+.not-found p + p {
+  margin-top: 0.5rem;
+}
+
+/* Small screens: stack the right-hand column under the left one */
+
+@media (max-width: 36rem) {
+  .entry-head {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "name"
+      "sub"
+      "place"
+      "date";
+  }
+
+  .entry-place,
+  .entry-date {
+    text-align: left;
+    white-space: normal;
+  }
+
+  .entry-place {
+    font-size: var(--step-small);
+  }
+}
+
+@media (min-width: 48rem) {
+  html {
+    font-size: 118.75%;
+  }
+
+  :root {
+    --gutter: 2rem;
+  }
+}
+
+/* Printing gives a one-column paper CV */
+
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm 14mm;
+  }
+
+  html {
+    font-size: 9.5pt;
+  }
+
+  .site-header,
+  .skip-link {
+    display: none;
+  }
+
+  .page {
+    max-width: none;
+    padding: 0;
+  }
+
+  .cv-head {
+    margin-top: 0;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  .entry {
+    break-inside: avoid;
+  }
+
+  body {
+    line-height: 1.4;
+  }
+
+  .cv-section h2 {
+    margin: 1.25rem 0 0.5rem;
+    break-after: avoid;
+  }
+
+  .entry + .entry {
+    margin-top: 0.6rem;
+  }
+
+  .items li + li {
+    margin-top: 0.1rem;
+  }
+
+  .site-footer {
+    margin-top: 1.5rem;
+    padding-bottom: 0;
+  }
+}
