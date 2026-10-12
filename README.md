@@ -18,25 +18,6 @@
 - Frontend mentor at **Mancho School**: taught 20+ students through lectures, workshops and code review.
 - Currently learning: data structures and algorithms, CS fundamentals.
 
-### Work
-
-Commercial projects at Mancho Devs (private code):
-
-- **Finik**, payment platform: admin panel modules (transactions, accounts, access rights), commission filtering on DynamoDB, a documentation site for the Payments Gateway and Web SDK in three languages, help for merchants integrating the Web SDK (QR codes and bank-app deep links).
-- **umrahhajj**, Hajj/Umrah management platform: shipped the MVP in about 3 weeks.
-- **SlonExpress**, international logistics platform: took it to MVP; admin panel for users, parcels, orders and warehouses.
-
-### Featured projects
-
-| Project | What it is | Stack |
-| --- | --- | --- |
-| [AWS-project](https://github.com/Abdillamit/AWS-project) | Full-stack serverless app with beta and prod environments and a CI/CD pipeline with manual approval | Gatsby, Apollo Client, redux-observable, AppSync, Lambda, DynamoDB, Cognito, AWS CDK, CodePipeline |
-| [islam-edu-backend](https://github.com/Abdillamit/islam-edu-backend) | API for an Islamic education app in Kyrgyzstan: lessons, categories, progress, bookmarks | NestJS, PostgreSQL, Prisma, JWT |
-| [islam-edu-mobile](https://github.com/Abdillamit/islam-edu-mobile) | Mobile client for the same app, Kyrgyz and Russian | Flutter, Riverpod, Dio |
-| [Abdillamit-Life-web](https://github.com/Abdillamit/Abdillamit-Life-web) | Life-logging PWA with charts and offline support | Next.js 16, React 19, Supabase, Tailwind CSS |
-| [Abdillamit-Life-back](https://github.com/Abdillamit/Abdillamit-Life-back) | REST API for the life-logging PWA | Express, TypeScript, Supabase, Zod |
-| [abdillamit-com](https://github.com/Abdillamit/abdillamit-com) | Personal website and blog in three languages | Astro, TypeScript |
-
 ### Tech stack
 
 **Languages**
