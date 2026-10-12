@@ -48,10 +48,6 @@
   <img src="https://img.shields.io/badge/Node.js-000000?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js" />
   <img src="https://img.shields.io/badge/GraphQL-000000?style=for-the-badge&logo=graphql&logoColor=white" alt="GraphQL" />
   <img src="https://img.shields.io/badge/AWS-000000?style=for-the-badge" alt="AWS" />
-  <img src="https://img.shields.io/badge/Lambda-000000?style=for-the-badge" alt="AWS Lambda" />
-  <img src="https://img.shields.io/badge/AppSync-000000?style=for-the-badge" alt="AWS AppSync" />
-  <img src="https://img.shields.io/badge/DynamoDB-000000?style=for-the-badge" alt="Amazon DynamoDB" />
-  <img src="https://img.shields.io/badge/Cognito-000000?style=for-the-badge" alt="Amazon Cognito" />
 </p>
 
 **Testing and tools**
