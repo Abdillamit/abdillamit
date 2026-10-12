@@ -47,8 +47,6 @@
 <p>
   <img src="https://img.shields.io/badge/Node.js-000000?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js" />
   <img src="https://img.shields.io/badge/GraphQL-000000?style=for-the-badge&logo=graphql&logoColor=white" alt="GraphQL" />
-  <img src="https://img.shields.io/badge/NestJS-000000?style=for-the-badge&logo=nestjs&logoColor=white" alt="NestJS" />
-  <img src="https://img.shields.io/badge/PostgreSQL-000000?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
   <img src="https://img.shields.io/badge/AWS-000000?style=for-the-badge" alt="AWS" />
   <img src="https://img.shields.io/badge/Lambda-000000?style=for-the-badge" alt="AWS Lambda" />
   <img src="https://img.shields.io/badge/AppSync-000000?style=for-the-badge" alt="AWS AppSync" />
