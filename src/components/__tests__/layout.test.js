@@ -1,52 +1,53 @@
 import React from "react"
 import { render, screen } from "@testing-library/react"
 import Layout from "../layout"
-import { updated } from "../../data/cv"
 
 // Mock the header to test Layout on its own
 jest.mock("../header", () => {
-  return function MockHeader({ lang }) {
-    return <div data-testid="mock-header">Header {lang}</div>
+  return function MockHeader({ lang, current, translations }) {
+    return (
+      <div
+        data-testid="mock-header"
+        data-current={current}
+        data-ru={translations?.ru}
+      >
+        Header {lang}
+      </div>
+    )
   }
 })
 
 describe("Layout component", () => {
   it("renders the header, children and main landmark", () => {
     render(
-      <Layout lang="ru">
+      <Layout lang="ru" current="blog" translations={{ ru: "/ru/blog/" }}>
         <div>Test Content</div>
       </Layout>
     )
 
     expect(screen.getByText("Test Content")).toBeInTheDocument()
-    expect(screen.getByTestId("mock-header")).toHaveTextContent("Header ru")
+    const header = screen.getByTestId("mock-header")
+    expect(header).toHaveTextContent("Header ru")
+    expect(header).toHaveAttribute("data-current", "blog")
+    expect(header).toHaveAttribute("data-ru", "/ru/blog/")
     expect(screen.getByRole("main")).toHaveAttribute("id", "content")
-  })
-
-  it("renders the footer with the name and update date", () => {
-    render(
-      <Layout ui={{ updated: "Обновлено" }} name="Abdillamit Mamytov">
-        <div />
-      </Layout>
+    expect(screen.getByText("Перейти к содержанию")).toHaveAttribute(
+      "href",
+      "#content"
     )
-
-    const footer = screen.getByRole("contentinfo")
-    expect(footer).toHaveTextContent("Abdillamit Mamytov")
-    expect(footer).toHaveTextContent("Обновлено 12.10.2026")
-    expect(footer.querySelector("time")).toHaveAttribute("dateTime", updated)
   })
 
-  it("uses English defaults when no labels are passed", () => {
+  it("uses English by default", () => {
     render(
       <Layout>
         <div />
       </Layout>
     )
 
-    expect(screen.getByRole("contentinfo")).toHaveTextContent("Updated")
     expect(screen.getByText("Skip to content")).toHaveAttribute(
       "href",
       "#content"
     )
+    expect(screen.getByRole("contentinfo")).toHaveTextContent("Colophon")
   })
 })

@@ -1,9 +1,9 @@
 /*
- * Abdillamit Mamytov — CV site
+ * Abdillamit Mamytov — personal site
  *
- * The page is set like the LaTeX CV it comes from: Computer Modern
- * (CMU Serif) with real small caps, black ink on white paper, a thin
- * rule under each section title and dates set flush right.
+ * Set like the LaTeX CV it comes from: Computer Modern (CMU Serif) with
+ * real small caps, black ink on white paper, thin rules between sections,
+ * section titles in a left column, and a black colophon at the bottom.
  */
 
 @font-face {
@@ -36,13 +36,9 @@
   --font-serif: "CMU Serif", "Latin Modern Roman", "Computer Modern Serif",
     Georgia, "Times New Roman", serif;
 
-  --step-small: 0.875rem;
-  --step-base: 1rem;
-  --step-section: 1.375rem;
-  --step-name: clamp(2.4rem, 9vw, 3.75rem);
-
-  --measure: 46rem;
-  --gutter: 1rem;
+  --wide: 62rem;
+  --narrow: 39rem;
+  --gutter: 1.1rem;
   --rule: 1px solid var(--ink);
 }
 
@@ -63,8 +59,8 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-serif);
-  font-size: var(--step-base);
-  line-height: 1.55;
+  font-size: 1rem;
+  line-height: 1.6;
   font-kerning: normal;
   font-variant-numeric: lining-nums;
   text-rendering: optimizeLegibility;
@@ -89,9 +85,8 @@ a:hover {
   text-decoration-thickness: 2px;
 }
 
-a:focus-visible,
-[tabindex]:focus-visible {
-  outline: 2px solid var(--ink);
+a:focus-visible {
+  outline: 2px solid currentColor;
   outline-offset: 3px;
 }
 
@@ -99,6 +94,7 @@ a:focus-visible,
   position: absolute;
   left: -9999px;
   top: 0.75rem;
+  z-index: 1;
   padding: 0.25rem 0.5rem;
   background: var(--paper);
   border: var(--rule);
@@ -108,80 +104,310 @@ a:focus-visible,
   left: var(--gutter);
 }
 
-/* Page frame */
+.is-italic {
+  font-style: italic;
+}
 
-.page {
-  max-width: var(--measure);
+.wrap {
+  max-width: var(--wide);
   margin: 0 auto;
   padding: 0 var(--gutter);
 }
 
-.site-header {
+/* Keep the footer at the bottom of short pages */
+.page {
   display: flex;
-  justify-content: flex-end;
-  padding-top: 1rem;
-  font-size: var(--step-small);
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page > main {
+  flex: 1 0 auto;
+}
+
+/* Header */
+
+.site-header {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 0.6rem var(--gutter);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0 2rem;
+}
+
+.site-header::after {
+  content: "";
+  flex-basis: 100%;
+  border-bottom: var(--rule);
+}
+
+.brand {
+  padding: 0.6rem 0;
+  font-size: 1.3rem;
+  font-variant-caps: small-caps;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 2rem;
+}
+
+.nav-links,
+.language-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-links a,
+.language-switch a,
+.language-switch span {
+  display: inline-block;
+  padding: 0.6rem 0;
+  text-decoration: none;
+}
+
+.nav-links a[aria-current="page"] {
+  box-shadow: inset 0 -2px 0 var(--ink);
+}
+
+.nav-links a:hover,
+.language-switch a:hover {
+  text-decoration: underline;
 }
 
 .language-switch {
+  gap: 0 0.9rem;
+  font-size: 0.875rem;
+}
+
+.language-switch a {
+  text-decoration: underline;
+}
+
+/* Shared section layout: title on the left, content on the right */
+
+.split {
+  display: grid;
+  grid-template-columns: 13rem minmax(0, 1fr);
+  gap: 1rem 2.25rem;
+  padding: 2.5rem 0 3rem;
+  border-top: var(--rule);
+}
+
+.section-title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 400;
+  font-variant-caps: small-caps;
+  line-height: 1.15;
+}
+
+.items {
+  margin: 0;
+  padding-left: 1.4rem;
+  list-style-type: "\25E6\2002";
+  hyphens: auto;
+}
+
+.items li + li {
+  margin-top: 0.5rem;
+}
+
+.more-link {
+  margin: 1.25rem 0 0;
+}
+
+/* About */
+
+.hero {
+  padding-top: 5rem;
+  padding-bottom: 4rem;
+}
+
+.hero-name {
+  margin: 0;
+  font-size: clamp(3.3rem, 11vw, 8.25rem);
+  font-weight: 400;
+  font-variant-caps: small-caps;
+  line-height: 0.92;
+  letter-spacing: -0.005em;
+}
+
+.hero-name span {
+  display: block;
+}
+
+.hero-lede {
+  max-width: 42rem;
+  margin: 2.25rem 0 0;
+  font-size: clamp(1.2rem, 2.3vw, 1.6rem);
+  font-style: italic;
+  line-height: 1.42;
+}
+
+.hero-links {
   display: flex;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0 1.75rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 1.05rem;
+}
+
+.hero-links a {
+  display: inline-block;
+  padding: 0.5rem 0;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.site-footer {
+.timeline-step {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: baseline;
+}
+
+.timeline-mark {
+  font-size: 2.1rem;
+  line-height: 1;
+}
+
+.timeline-mark.is-word {
+  font-size: 1.75rem;
+  font-variant-caps: small-caps;
+}
+
+.timeline-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.timeline-text {
+  margin: 0.3rem 0 0;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.5rem 3.5rem;
+  padding: 2.5rem 0 4.5rem;
+  border-top: var(--rule);
+}
+
+.two-col .section-title {
+  margin-bottom: 1rem;
+}
+
+.post-date {
+  margin: 0;
+  font-size: 0.95rem;
+  font-style: italic;
+}
+
+.teaser-title {
+  margin: 0.4rem 0 0;
+  font-size: 1.6rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.teaser-title a,
+.post-card__title a {
+  text-decoration: none;
+}
+
+.teaser-title a:hover,
+.post-card__title a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+}
+
+.teaser-text {
+  margin: 0.75rem 0 0;
+}
+
+/* Page heads: Resume and Blog */
+
+.page-head {
+  padding-top: 4rem;
+}
+
+.page-head__row {
   display: flex;
   flex-wrap: wrap;
+  align-items: baseline;
   justify-content: space-between;
-  gap: 0.25rem 1rem;
-  margin-top: 3rem;
-  padding: 1rem 0 2rem;
-  font-size: var(--step-small);
+  gap: 1rem 2rem;
 }
 
-/* Head of the CV */
-
-.cv-head {
-  margin: 2.5rem 0 1.5rem;
-  text-align: center;
-}
-
-.cv-name {
-  margin: 0 0 0.5rem;
-  font-size: var(--step-name);
+.page-title {
+  margin: 0;
+  font-size: clamp(3rem, 8vw, 5.25rem);
   font-weight: 400;
   font-variant-caps: small-caps;
-  line-height: 1.1;
-  letter-spacing: 0.01em;
+  line-height: 1;
 }
 
-.cv-role,
+.page-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 1.5rem;
+  margin: 0;
+}
+
+.page-meta a {
+  display: inline-block;
+  padding: 0.4rem 0;
+}
+
+.page-lede {
+  max-width: 42rem;
+  margin: 1.5rem 0 0;
+  font-size: 1.2rem;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.page-head + .split {
+  margin-top: 3rem;
+}
+
+/* Resume */
+
 .cv-contacts {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.15rem 1.5em;
-  margin: 0;
+  gap: 0 1.5rem;
+  margin: 1rem 0 0;
   padding: 0;
   list-style: none;
 }
 
-.cv-role {
-  margin-bottom: 0.35rem;
-}
-
-/* Sections */
-
-.cv-section h2 {
-  margin: 2.25rem 0 0.75rem;
-  padding-bottom: 0.1rem;
-  border-bottom: var(--rule);
-  font-size: var(--step-section);
-  font-weight: 400;
-  font-variant-caps: small-caps;
-  line-height: 1.25;
+.cv-contacts a {
+  display: inline-block;
+  padding: 0.4rem 0;
 }
 
 .cv-section p {
@@ -195,7 +421,7 @@ a:focus-visible,
 }
 
 .entry + .entry {
-  margin-top: 1.1rem;
+  margin-top: 1.75rem;
 }
 
 .entry-head {
@@ -206,12 +432,13 @@ a:focus-visible,
     "sub date";
   column-gap: 1.5rem;
   align-items: baseline;
+  margin-bottom: 0.5rem;
 }
 
 .entry-name {
   grid-area: name;
   margin: 0;
-  font-size: var(--step-base);
+  font-size: 1.05rem;
   font-weight: 700;
 }
 
@@ -227,40 +454,142 @@ a:focus-visible,
 
 .entry-date {
   grid-area: date;
-  text-align: right;
   font-style: italic;
+  text-align: right;
   white-space: nowrap;
 }
 
-.is-italic {
-  font-style: italic;
-}
-
 .entry-stack {
-  margin-top: 0.25rem;
   font-style: italic;
 }
 
-/* Bullet lists, with the same markers as the CV */
+.skills {
+  display: grid;
+  grid-template-columns: 12rem minmax(0, 1fr);
+  gap: 0.75rem 1.5rem;
+  margin: 0;
+}
 
-.items {
-  margin: 0.35rem 0 0;
-  padding-left: 1.4rem;
-  list-style-type: "\25E6\2002";
+.skills dt {
+  font-weight: 700;
+}
+
+.skills dd {
+  margin: 0;
+}
+
+/* Blog */
+
+.blog {
+  padding-bottom: 2rem;
+}
+
+.blog-year__title {
+  margin: 0;
+  font-size: 3rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.post-card + .post-card {
+  margin-top: 2.5rem;
+}
+
+.post-card__title {
+  margin: 0.5rem 0 0;
+  font-size: clamp(1.75rem, 3.4vw, 2.5rem);
+  font-weight: 400;
+  line-height: 1.12;
+}
+
+.post-card__text {
+  max-width: 40rem;
+  margin: 1rem 0 0;
+  font-size: 1.1rem;
+}
+
+.blog-next p {
+  max-width: 40rem;
+  margin: 0;
+}
+
+/* Post */
+
+.post {
+  max-width: var(--narrow);
+  margin: 0 auto;
+  padding: 3.5rem var(--gutter) 5rem;
+}
+
+.post-back {
+  margin: 0;
+}
+
+.post-title {
+  margin: 2rem 0 0;
+  font-size: clamp(2.2rem, 5.4vw, 3.5rem);
+  font-weight: 400;
+  line-height: 1.08;
+}
+
+.post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  margin: 1.25rem 0 0;
+  font-style: italic;
+}
+
+.post-body {
+  margin-top: 2.5rem;
+  padding-top: 2.25rem;
+  border-top: var(--rule);
+  font-size: 1.12rem;
+  line-height: 1.68;
   hyphens: auto;
 }
 
-.items--skills {
-  margin-top: 0;
-  list-style-type: "\2022\2002";
+.post-body p {
+  margin: 0 0 1rem;
 }
 
-.items li + li {
-  margin-top: 0.3rem;
+.post-body > p:first-child::first-letter {
+  float: left;
+  margin: 0.06em 0.1em 0 0;
+  font-size: 4.4em;
+  line-height: 0.82;
+}
+
+.post-body h2 {
+  margin: 2.5rem 0 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 400;
+  font-variant-caps: small-caps;
+  line-height: 1.2;
+}
+
+.post-body blockquote {
+  margin: 2rem 0;
+  padding-left: 1.5rem;
+  border-left: var(--rule);
+  font-size: 1.4rem;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.post-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 3rem;
+  padding-top: 1.25rem;
+  border-top: var(--rule);
 }
 
 .not-found {
-  margin: 4rem 0;
+  margin: 4rem auto;
+  padding: 0 var(--gutter);
   text-align: center;
 }
 
@@ -268,9 +597,95 @@ a:focus-visible,
   margin-top: 0.5rem;
 }
 
-/* Small screens: stack the right-hand column under the left one */
+.not-found__code {
+  font-size: 4rem;
+  font-weight: 400;
+  font-variant-caps: small-caps;
+}
 
-@media (max-width: 36rem) {
+/* Footer: the colophon */
+
+.site-footer {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.site-footer ::selection {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.site-footer__inner {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem 3.5rem;
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 3.5rem var(--gutter) 3rem;
+}
+
+.colophon-title {
+  margin: 0 0 0.85rem;
+  font-size: 1.5rem;
+  font-weight: 400;
+  font-variant-caps: small-caps;
+}
+
+.colophon {
+  max-width: 28rem;
+  margin: 0;
+  line-height: 1.65;
+}
+
+.footer-contacts {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+}
+
+.footer-contacts a {
+  display: inline-block;
+  padding: 0.3rem 0;
+}
+
+.footer-rights {
+  margin: 1.25rem 0 0;
+  font-size: 0.875rem;
+}
+
+/* Small screens */
+
+@media (max-width: 46rem) {
+  .split,
+  .two-col,
+  .site-footer__inner,
+  .skills {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .skills dt {
+    margin-top: 0.5rem;
+  }
+
+  .timeline-step {
+    grid-template-columns: 5.25rem minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .timeline-mark {
+    font-size: 1.6rem;
+  }
+
+  .timeline-mark.is-word {
+    font-size: 1.2rem;
+  }
+
+  .hero {
+    padding-top: 3rem;
+    padding-bottom: 2.5rem;
+  }
+
   .entry-head {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
@@ -287,7 +702,7 @@ a:focus-visible,
   }
 
   .entry-place {
-    font-size: var(--step-small);
+    font-size: 0.875rem;
   }
 }
 
@@ -301,7 +716,7 @@ a:focus-visible,
   }
 }
 
-/* Printing gives a one-column paper CV */
+/* Printing the resume page gives a paper CV */
 
 @media print {
   @page {
@@ -313,18 +728,32 @@ a:focus-visible,
     font-size: 9.5pt;
   }
 
+  body {
+    line-height: 1.4;
+  }
+
   .site-header,
-  .skip-link {
+  .site-footer,
+  .skip-link,
+  .page-meta {
     display: none;
   }
 
-  .page {
+  .wrap {
     max-width: none;
     padding: 0;
   }
 
-  .cv-head {
-    margin-top: 0;
+  .page-head {
+    padding-top: 0;
+  }
+
+  .page-head + .split {
+    margin-top: 1rem;
+  }
+
+  .split {
+    padding: 1rem 0 1.25rem;
   }
 
   a {
@@ -335,25 +764,11 @@ a:focus-visible,
     break-inside: avoid;
   }
 
-  body {
-    line-height: 1.4;
-  }
-
-  .cv-section h2 {
-    margin: 1.25rem 0 0.5rem;
-    break-after: avoid;
-  }
-
   .entry + .entry {
-    margin-top: 0.6rem;
+    margin-top: 0.75rem;
   }
 
   .items li + li {
     margin-top: 0.1rem;
-  }
-
-  .site-footer {
-    margin-top: 1.5rem;
-    padding-bottom: 0;
   }
 }

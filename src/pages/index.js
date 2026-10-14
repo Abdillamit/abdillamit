@@ -1,25 +1,49 @@
 import * as React from "react"
+import { graphql } from "gatsby"
 
 import Layout from "../components/layout"
 import Seo from "../components/seo"
-import CvPage from "../components/cv-page"
-import { cv } from "../data/cv"
+import AboutPage from "../components/about-page"
+import { site } from "../data/site"
+import { pageRoutes } from "../data/routes"
+import { postsFrom } from "../data/posts"
 
-const content = cv.en
+const lang = "en"
 
-const IndexPage = () => (
-  <Layout lang={content.lang} ui={content.ui} name={content.name}>
-    <CvPage content={content} />
+const AboutPageEn = ({ data }) => (
+  <Layout lang={lang} current="about" translations={pageRoutes.about}>
+    <AboutPage lang={lang} latestPost={postsFrom(data)[0]} />
   </Layout>
 )
 
 export const Head = () => (
   <Seo
-    lang={content.lang}
-    path={content.path}
-    title={content.meta.title}
-    description={content.meta.description}
+    lang={lang}
+    path={pageRoutes.about[lang]}
+    alternates={pageRoutes.about}
+    title={site[lang].meta.about.title}
+    description={site[lang].meta.about.description}
   />
 )
 
-export default IndexPage
+export const query = graphql`
+  query AboutEn {
+    allMarkdownRemark(
+      filter: { frontmatter: { lang: { eq: "en" } } }
+      sort: { frontmatter: { date: DESC } }
+      limit: 1
+    ) {
+      nodes {
+        readingTime
+        frontmatter {
+          title
+          description
+          date
+          slug
+        }
+      }
+    }
+  }
+`
+
+export default AboutPageEn

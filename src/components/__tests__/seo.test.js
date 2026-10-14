@@ -44,14 +44,16 @@ describe("SEO component", () => {
     const { container, rerender } = render(
       <Seo title="T" description="Custom Description" />
     )
-    expect(
-      container.querySelector("meta[name='description']")
-    ).toHaveAttribute("content", "Custom Description")
+    expect(container.querySelector("meta[name='description']")).toHaveAttribute(
+      "content",
+      "Custom Description"
+    )
 
     rerender(<Seo title="T" />)
-    expect(
-      container.querySelector("meta[name='description']")
-    ).toHaveAttribute("content", "Default description")
+    expect(container.querySelector("meta[name='description']")).toHaveAttribute(
+      "content",
+      "Default description"
+    )
   })
 
   it("sets the html language", () => {
@@ -69,15 +71,57 @@ describe("SEO component", () => {
       "href",
       "https://example.com/ru/"
     )
-    expect(
-      container.querySelector("link[hreflang='en']")
-    ).toHaveAttribute("href", "https://example.com/")
-    expect(
-      container.querySelector("link[hreflang='ru']")
-    ).toHaveAttribute("href", "https://example.com/ru/")
+    expect(container.querySelector("link[hreflang='en']")).toHaveAttribute(
+      "href",
+      "https://example.com/"
+    )
+    expect(container.querySelector("link[hreflang='ru']")).toHaveAttribute(
+      "href",
+      "https://example.com/ru/"
+    )
     expect(
       container.querySelector("link[hreflang='x-default']")
     ).toHaveAttribute("href", "https://example.com/")
+  })
+
+  it("links the language versions of the given page", () => {
+    const { container } = render(
+      <Seo
+        title="T"
+        lang="en"
+        path="/blog/post/"
+        alternates={{ en: "/blog/post/", ru: "/ru/blog/post/" }}
+        type="article"
+      />
+    )
+
+    expect(container.querySelector("link[rel='canonical']")).toHaveAttribute(
+      "href",
+      "https://example.com/blog/post/"
+    )
+    expect(container.querySelector("link[hreflang='ru']")).toHaveAttribute(
+      "href",
+      "https://example.com/ru/blog/post/"
+    )
+    expect(
+      container.querySelector("link[hreflang='x-default']")
+    ).toHaveAttribute("href", "https://example.com/blog/post/")
+    expect(container.querySelector("meta[property='og:type']")).toHaveAttribute(
+      "content",
+      "article"
+    )
+    expect(container.querySelector("meta[property='og:url']")).toHaveAttribute(
+      "content",
+      "https://example.com/blog/post/"
+    )
+  })
+
+  it("preloads the main font", () => {
+    const { container } = render(<Seo title="T" />)
+    expect(container.querySelector("link[rel='preload']")).toHaveAttribute(
+      "href",
+      "/fonts/cmunrm.woff2"
+    )
   })
 
   it("skips URL tags when siteUrl is missing", () => {
@@ -99,9 +143,10 @@ describe("SEO component", () => {
     expect(
       container.querySelector("meta[property='og:title']")
     ).toHaveAttribute("content", "Test Title")
-    expect(
-      container.querySelector("meta[property='og:type']")
-    ).toHaveAttribute("content", "profile")
+    expect(container.querySelector("meta[property='og:type']")).toHaveAttribute(
+      "content",
+      "website"
+    )
     expect(
       container.querySelector("meta[property='og:locale']")
     ).toHaveAttribute("content", "en_US")

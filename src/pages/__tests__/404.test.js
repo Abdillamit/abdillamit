@@ -16,14 +16,16 @@ jest.mock("../../components/seo", () => {
 })
 
 describe("NotFoundPage", () => {
-  it("explains the error in both languages and links to both CVs", () => {
+  it("explains the error in both languages and links to both home pages", () => {
     render(<NotFoundPage />)
 
     expect(screen.getByTestId("mock-layout")).toBeInTheDocument()
     expect(screen.getByText("This page does not exist.")).toBeInTheDocument()
     expect(screen.getByText("Такой страницы нет.")).toBeInTheDocument()
-    expect(screen.getByRole("link", { name: "Open the CV" })).toHaveAttribute("href", "/")
-    expect(screen.getByRole("link", { name: "Открыть резюме" })).toHaveAttribute(
+    expect(
+      screen.getByRole("link", { name: "Go to the home page" })
+    ).toHaveAttribute("href", "/")
+    expect(screen.getByRole("link", { name: "На главную" })).toHaveAttribute(
       "href",
       "/ru/"
     )

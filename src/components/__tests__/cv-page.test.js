@@ -6,25 +6,57 @@ import { formatDay } from "../format-day"
 import { cv } from "../../data/cv"
 
 describe("CvPage", () => {
-  it("renders the name, role and contacts", () => {
+  it("renders the title, update date, PDF link and contacts", () => {
     render(<CvPage content={cv.en} />)
 
     expect(
-      screen.getByRole("heading", { level: 1, name: "Abdillamit Mamytov" })
+      screen.getByRole("heading", { level: 1, name: "Resume" })
     ).toBeInTheDocument()
-    expect(screen.getByText("Full Stack Software Engineer", { selector: ".cv-role span" })).toBeInTheDocument()
-    expect(screen.getByRole("link", { name: "github.com/Abdillamit" })).toHaveAttribute(
+    expect(screen.getByText("12.10.2026")).toHaveAttribute(
+      "dateTime",
+      "2026-10-12"
+    )
+    const pdf = screen.getByRole("link", { name: "Download PDF" })
+    expect(pdf).toHaveAttribute("href", "/cv/Abdillamit_Mamytov_CV_EN.pdf")
+    expect(pdf).toHaveAttribute("download")
+    expect(
+      screen.getByRole("link", { name: "github.com/Abdillamit" })
+    ).toHaveAttribute("href", "https://github.com/Abdillamit")
+    expect(screen.getByText(cv.en.profile)).toBeInTheDocument()
+  })
+
+  it("links the Russian PDF on the Russian resume", () => {
+    render(<CvPage content={cv.ru} />)
+
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Резюме" })
+    ).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "Скачать PDF" })).toHaveAttribute(
       "href",
-      "https://github.com/Abdillamit"
+      "/cv/Abdillamit_Mamytov_CV_RU.pdf"
     )
   })
 
   it("renders every section heading in English", () => {
     render(<CvPage content={cv.en} />)
 
-    Object.values(cv.en.headings).forEach(title => {
-      expect(screen.getByRole("heading", { level: 2, name: title })).toBeInTheDocument()
-    })
+    // The profile is the page lede, not a separate section
+    Object.entries(cv.en.headings)
+      .filter(([key]) => key !== "profile")
+      .forEach(([, title]) => {
+        expect(
+          screen.getByRole("heading", { level: 2, name: title })
+        ).toBeInTheDocument()
+      })
+  })
+
+  it("renders skills as a term list", () => {
+    const { container } = render(<CvPage content={cv.en} />)
+
+    const terms = [...container.querySelectorAll(".skills dt")].map(
+      node => node.textContent
+    )
+    expect(terms).toEqual(cv.en.skills.map(skill => skill.label))
   })
 
   it("renders every job, project and course", () => {
@@ -35,12 +67,16 @@ describe("CvPage", () => {
       expect(within(experience).getAllByText(job.org).length).toBeGreaterThan(0)
     })
 
-    const projects = screen.getByRole("region", { name: "Проекты в Mancho Devs" })
+    const projects = screen.getByRole("region", {
+      name: "Проекты в Mancho Devs",
+    })
     cv.ru.projects.forEach(project => {
       expect(within(projects).getByText(project.name)).toBeInTheDocument()
     })
 
-    const education = screen.getByRole("region", { name: "Образование и курсы" })
+    const education = screen.getByRole("region", {
+      name: "Образование и курсы",
+    })
     cv.ru.education.forEach(course => {
       expect(within(education).getByText(course.org)).toBeInTheDocument()
     })
@@ -53,9 +89,9 @@ describe("CvPage", () => {
       node => node.textContent
     )
     expect(periods.filter(text => text === "09.2024 – present")).toHaveLength(2)
-    expect(container.querySelector("time[datetime='2023-03']")).toHaveTextContent(
-      "03.2023"
-    )
+    expect(
+      container.querySelector("time[datetime='2023-03']")
+    ).toHaveTextContent("03.2023")
   })
 
   it("uses the Russian label for a current role", () => {
