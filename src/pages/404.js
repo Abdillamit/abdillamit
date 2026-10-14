@@ -3,18 +3,19 @@ import { Link } from "gatsby"
 
 import Layout from "../components/layout"
 import Seo from "../components/seo"
+import { pageRoutes } from "../data/routes"
 
 const NotFoundPage = () => (
   <Layout>
     <article className="not-found">
-      <h1 className="cv-name">404</h1>
+      <h1 className="not-found__code">404</h1>
       <p>This page does not exist.</p>
       <p lang="ru">Такой страницы нет.</p>
       <p>
-        <Link to="/">Open the CV</Link>
+        <Link to={pageRoutes.about.en}>Go to the home page</Link>
         {" / "}
-        <Link to="/ru/" lang="ru" hrefLang="ru">
-          Открыть резюме
+        <Link to={pageRoutes.about.ru} lang="ru" hrefLang="ru">
+          На главную
         </Link>
       </p>
     </article>

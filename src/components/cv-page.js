@@ -1,6 +1,9 @@
 import * as React from "react"
 
 import Period from "./period"
+import { formatDay } from "./format-day"
+import { updated } from "../data/cv"
+import { site } from "../data/site"
 
 const Items = ({ items }) => (
   <ul className="items">
@@ -12,24 +15,36 @@ const Items = ({ items }) => (
   </ul>
 )
 
+// One resume section: title in the left column, content on the right.
 const Section = ({ id, title, children }) => (
-  <section className="cv-section" aria-labelledby={id}>
-    <h2 id={id}>{title}</h2>
-    {children}
+  <section className="split cv-section" aria-labelledby={id}>
+    <h2 id={id} className="section-title">
+      {title}
+    </h2>
+    <div className="cv-section__body">{children}</div>
   </section>
 )
 
 const CvPage = ({ content }) => {
   const { headings, ui } = content
+  const text = site[content.lang].resume
 
   return (
-    <article className="cv">
-      <header className="cv-head">
-        <h1 className="cv-name">{content.name}</h1>
-        <p className="cv-role">
-          <span>{content.role}</span>
-          <span>{content.location}</span>
-        </p>
+    <article className="cv wrap">
+      <header className="page-head">
+        <div className="page-head__row">
+          <h1 className="page-title">{text.title}</h1>
+          <p className="page-meta">
+            <span className="is-italic">
+              {text.updated}{" "}
+              <time dateTime={updated}>{formatDay(updated)}</time>
+            </span>
+            <a href={text.pdf} download>
+              {text.download}
+            </a>
+          </p>
+        </div>
+        <p className="page-lede">{content.profile}</p>
         <ul className="cv-contacts">
           {content.contacts.map(contact => (
             <li key={contact.id}>
@@ -38,10 +53,6 @@ const CvPage = ({ content }) => {
           ))}
         </ul>
       </header>
-
-      <Section id="profile" title={headings.profile}>
-        <p className="lede">{content.profile}</p>
-      </Section>
 
       <Section id="experience" title={headings.experience}>
         <ol className="entries">
@@ -52,7 +63,11 @@ const CvPage = ({ content }) => {
                 <span className="entry-place">{job.place}</span>
                 <p className="entry-sub">{job.title}</p>
                 <span className="entry-date">
-                  <Period from={job.from} to={job.to} presentLabel={ui.present} />
+                  <Period
+                    from={job.from}
+                    to={job.to}
+                    presentLabel={ui.present}
+                  />
                 </span>
               </div>
               <Items items={job.items} />
@@ -85,7 +100,11 @@ const CvPage = ({ content }) => {
               <div className="entry-head">
                 <h3 className="entry-name">{course.org}</h3>
                 <span className="entry-place is-italic">
-                  <Period from={course.from} to={course.to} presentLabel={ui.present} />
+                  <Period
+                    from={course.from}
+                    to={course.to}
+                    presentLabel={ui.present}
+                  />
                 </span>
                 <p className="entry-sub">{course.program}</p>
               </div>
@@ -98,13 +117,14 @@ const CvPage = ({ content }) => {
       </Section>
 
       <Section id="skills" title={headings.skills}>
-        <ul className="items items--skills">
+        <dl className="skills">
           {content.skills.map(skill => (
-            <li key={skill.label}>
-              <strong>{skill.label}:</strong> {skill.text}
-            </li>
+            <React.Fragment key={skill.label}>
+              <dt>{skill.label}</dt>
+              <dd>{skill.text}</dd>
+            </React.Fragment>
           ))}
-        </ul>
+        </dl>
       </Section>
 
       <Section id="languages" title={headings.languages}>
