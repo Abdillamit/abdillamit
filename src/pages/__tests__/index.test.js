@@ -8,23 +8,8 @@ import ResumeRu, { Head as ResumeRuHead } from "../ru/resume"
 import BlogEn, { Head as BlogEnHead } from "../blog"
 import BlogRu, { Head as BlogRuHead } from "../ru/blog"
 
-// Isolate the pages from Layout and Seo
-jest.mock("../../components/layout", () => {
-  return function MockLayout({ lang, current, translations, children }) {
-    return (
-      <div
-        data-testid="mock-layout"
-        data-lang={lang}
-        data-current={current}
-        data-en={translations?.en}
-        data-ru={translations?.ru}
-      >
-        {children}
-      </div>
-    )
-  }
-})
-
+// Isolate the pages from Seo. The layout is added by wrapPageElement
+// (see src/wrap-page-element.js), not by the pages.
 jest.mock("../../components/seo", () => {
   return function MockSEO({ title, lang, path, alternates, type }) {
     return (
@@ -63,7 +48,6 @@ const pages = [
     Page: AboutEn,
     Head: AboutEnHead,
     lang: "en",
-    current: "about",
     path: "/",
     ru: "/ru/",
     heading: { level: 1, name: "Abdillamit Mamytov" },
@@ -73,7 +57,6 @@ const pages = [
     Page: AboutRu,
     Head: AboutRuHead,
     lang: "ru",
-    current: "about",
     path: "/ru/",
     ru: "/ru/",
     heading: { level: 2, name: "Путь" },
@@ -83,7 +66,6 @@ const pages = [
     Page: ResumeEn,
     Head: ResumeEnHead,
     lang: "en",
-    current: "resume",
     path: "/resume/",
     ru: "/ru/resume/",
     heading: { level: 2, name: "Experience" },
@@ -94,7 +76,6 @@ const pages = [
     Page: ResumeRu,
     Head: ResumeRuHead,
     lang: "ru",
-    current: "resume",
     path: "/ru/resume/",
     ru: "/ru/resume/",
     heading: { level: 2, name: "Опыт работы" },
@@ -105,7 +86,6 @@ const pages = [
     Page: BlogEn,
     Head: BlogEnHead,
     lang: "en",
-    current: "blog",
     path: "/blog/",
     ru: "/ru/blog/",
     heading: { level: 1, name: "Blog" },
@@ -115,7 +95,6 @@ const pages = [
     Page: BlogRu,
     Head: BlogRuHead,
     lang: "ru",
-    current: "blog",
     path: "/ru/blog/",
     ru: "/ru/blog/",
     heading: { level: 1, name: "Блог" },
@@ -124,15 +103,13 @@ const pages = [
 
 describe.each(pages)(
   "$name page",
-  ({ Page, Head, lang, current, path, ru, heading, type }) => {
-    it("renders inside the layout with the right section and language", () => {
-      render(<Page data={data} />)
+  ({ Page, Head, lang, path, ru, heading, type }) => {
+    it("renders its content without a layout of its own", () => {
+      const { container } = render(<Page data={data} />)
 
-      const layout = screen.getByTestId("mock-layout")
-      expect(layout).toHaveAttribute("data-lang", lang)
-      expect(layout).toHaveAttribute("data-current", current)
-      expect(layout).toHaveAttribute("data-ru", ru)
       expect(screen.getByRole("heading", heading)).toBeInTheDocument()
+      expect(container.querySelector(".site-header")).toBeNull()
+      expect(container.querySelector(".site-footer")).toBeNull()
     })
 
     it("passes metadata to Seo", () => {

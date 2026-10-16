@@ -40,6 +40,7 @@
   --narrow: 39rem;
   --gutter: 1.1rem;
   --rule: 1px solid var(--ink);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 *,
@@ -121,78 +122,303 @@ a:focus-visible {
   min-height: 100vh;
 }
 
-.page > main {
+.page-content {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+}
+
+.page-content > main {
   flex: 1 0 auto;
 }
 
-/* Header */
-
-.site-header {
-  max-width: var(--wide);
-  margin: 0 auto;
-  padding: 0.6rem var(--gutter);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0 2rem;
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-.site-header::after {
-  content: "";
-  flex-basis: 100%;
+/* While the mobile menu is open the page behind it does not scroll */
+html.has-menu-open {
+  overflow: hidden;
+}
+
+/* Header: sticks to the top, hides while scrolling down */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--paper);
+}
+
+.site-header__bar {
+  display: flex;
+  align-items: stretch;
+  gap: 2.25rem;
+  min-height: 4.75rem;
   border-bottom: var(--rule);
 }
 
 .brand {
-  padding: 0.6rem 0;
-  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-right: auto;
+  text-decoration: none;
+}
+
+.brand-mark {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border: var(--rule);
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.brand:hover .brand-mark {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.brand-name {
+  font-size: 1.2rem;
   font-variant-caps: small-caps;
   letter-spacing: 0.01em;
-  text-decoration: none;
+}
+
+.brand-role {
+  font-size: 0.8rem;
+  font-style: italic;
 }
 
 .site-nav {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0 2rem;
 }
 
-.nav-links,
-.language-switch {
+.nav-links {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0 1.5rem;
+  gap: 1.9rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.nav-links a,
-.language-switch a,
-.language-switch span {
-  display: inline-block;
-  padding: 0.6rem 0;
+.nav-links li {
+  position: relative;
+  display: flex;
+}
+
+.nav-links a {
+  display: flex;
+  align-items: center;
+  padding: 0 0.1rem;
   text-decoration: none;
 }
 
-.nav-links a[aria-current="page"] {
-  box-shadow: inset 0 -2px 0 var(--ink);
+/* A thicker piece of the header rule under the current section */
+.nav-underline {
+  position: absolute;
+  right: 0;
+  bottom: -2px;
+  left: 0;
+  height: 3px;
+  background: var(--ink);
 }
 
-.nav-links a:hover,
-.language-switch a:hover {
+/* EN | RU: the pill is black, the letters invert over it */
+.lang-switch {
+  display: flex;
+  align-self: center;
+  margin: 0;
+  padding: 2px;
+  border: var(--rule);
+  background: var(--paper);
+  isolation: isolate;
+  list-style: none;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+}
+
+.lang-option {
+  position: relative;
+  display: block;
+  padding: 0.3rem 0.6rem;
+  text-decoration: none;
+}
+
+.lang-pill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--ink);
+}
+
+.lang-code {
+  position: relative;
+  color: #fff;
+  mix-blend-mode: difference;
+}
+
+a.lang-option:hover .lang-code {
   text-decoration: underline;
 }
 
-.language-switch {
-  gap: 0 0.9rem;
-  font-size: 0.875rem;
+.menu-button {
+  display: none;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-right: -0.6rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
 }
 
-.language-switch a {
+.menu-button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: -4px;
+}
+
+.menu-icon {
+  position: relative;
+  display: block;
+  width: 1.2rem;
+  height: 0.55rem;
+}
+
+.menu-icon span {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 1.5px;
+  background: currentColor;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.menu-icon span:first-child {
+  top: 0;
+}
+
+.menu-icon span:last-child {
+  bottom: 0;
+}
+
+.menu-button[aria-expanded="true"] .menu-icon span:first-child {
+  transform: translateY(calc(0.275rem - 0.75px)) rotate(45deg);
+}
+
+.menu-button[aria-expanded="true"] .menu-icon span:last-child {
+  transform: translateY(calc(-0.275rem + 0.75px)) rotate(-45deg);
+}
+
+/* Full-screen menu on small screens, black like the colophon */
+.site-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 15;
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2.5rem;
+  padding: 6.25rem var(--gutter) 2rem;
+  overflow-y: auto;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.site-menu ::selection {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.site-menu__links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-menu__item {
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.site-menu__line {
+  display: block;
+}
+
+.site-menu__link {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  font-size: 2.5rem;
+  font-variant-caps: small-caps;
+  line-height: 1.1;
+  text-decoration: none;
+}
+
+.site-menu__link[aria-current="page"] .site-menu__text {
   text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.12em;
+}
+
+.site-menu__index {
+  min-width: 1.6rem;
+  font-size: 0.8rem;
+  font-style: italic;
+  font-variant-caps: normal;
+}
+
+.site-menu__contacts {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.site-menu__contacts a {
+  display: inline-block;
+  padding: 0.35rem 0;
+}
+
+.site-menu__label {
+  margin: 0 0 0.4rem;
+  font-variant-caps: small-caps;
+}
+
+/* Reading progress on blog posts */
+.read-progress {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 30;
+  height: 3px;
+  background: var(--ink);
+  transform-origin: 0 50%;
 }
 
 /* Shared section layout: title on the left, content on the right */
@@ -244,8 +470,68 @@ a:focus-visible {
   letter-spacing: -0.005em;
 }
 
-.hero-name span {
+/* Load animations: big names and titles rise from behind a mask,
+   the text under them fades up. Pure CSS, so they start with the first
+   paint and do not wait for JavaScript. */
+
+.reveal-line {
   display: block;
+  margin: -0.12em 0 -0.14em;
+  padding: 0.12em 0 0.14em;
+  overflow: hidden;
+}
+
+.reveal-line > span {
+  display: block;
+  animation: line-up 1s var(--ease-out) both;
+}
+
+.reveal-line + .reveal-line > span {
+  animation-delay: 0.09s;
+}
+
+.hero-lede {
+  animation: fade-up 0.9s var(--ease-out) 0.3s both;
+}
+
+.hero-links {
+  animation: fade-up 0.9s var(--ease-out) 0.42s both;
+}
+
+/* Every page eases in after navigation */
+.page-main {
+  animation: page-in 0.55s var(--ease-out) both;
+}
+
+@keyframes line-up {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.6rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .hero-lede {
@@ -271,6 +557,29 @@ a:focus-visible {
   padding: 0.5rem 0;
 }
 
+.timeline-wrap {
+  --mark-column: 7rem;
+  --mark-gap: 1.5rem;
+  position: relative;
+}
+
+/* Grey track with a black line that grows as the reader scrolls */
+.timeline-track {
+  position: absolute;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  left: calc(var(--mark-column) + var(--mark-gap) / 2);
+  width: 1px;
+  background: rgba(0, 0, 0, 0.14);
+}
+
+.timeline-line {
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  transform-origin: 50% 0;
+}
+
 .timeline {
   display: flex;
   flex-direction: column;
@@ -282,8 +591,8 @@ a:focus-visible {
 
 .timeline-step {
   display: grid;
-  grid-template-columns: 7rem minmax(0, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: var(--mark-column) minmax(0, 1fr);
+  gap: var(--mark-gap);
   align-items: baseline;
 }
 
@@ -668,9 +977,46 @@ a:focus-visible {
     margin-top: 0.5rem;
   }
 
-  .timeline-step {
-    grid-template-columns: 5.25rem minmax(0, 1fr);
-    gap: 0.75rem;
+  .timeline-wrap {
+    --mark-column: 5.25rem;
+    --mark-gap: 0.75rem;
+  }
+
+  .site-header__bar {
+    gap: 1rem;
+    min-height: 3.9rem;
+  }
+
+  .site-nav,
+  .brand-role {
+    display: none;
+  }
+
+  .menu-button,
+  .site-menu {
+    display: flex;
+  }
+
+  .brand {
+    gap: 0.65rem;
+  }
+
+  .brand-mark {
+    width: 2.15rem;
+    height: 2.15rem;
+    font-size: 0.8rem;
+  }
+
+  .brand-name {
+    font-size: 1.05rem;
+  }
+
+  .lang-switch {
+    font-size: 0.75rem;
+  }
+
+  .lang-option {
+    padding: 0.25rem 0.45rem;
   }
 
   .timeline-mark {
@@ -716,6 +1062,17 @@ a:focus-visible {
   }
 }
 
+/* People who ask their system for less motion get none */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* Printing the resume page gives a paper CV */
 
 @media print {
@@ -734,9 +1091,20 @@ a:focus-visible {
 
   .site-header,
   .site-footer,
+  .site-menu,
+  .read-progress,
   .skip-link,
   .page-meta {
     display: none;
+  }
+
+  /* Sections that were never scrolled into view are still hidden */
+  .reveal,
+  .page-main,
+  .reveal-line > span {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
   }
 
   .wrap {

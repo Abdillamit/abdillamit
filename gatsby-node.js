@@ -13,6 +13,14 @@ const path = require("path")
 const postPath = (lang, slug) =>
   lang === "ru" ? `/ru/blog/${slug}/` : `/blog/${slug}/`
 
+// Mark the 404 page, so the layout does not treat a missing
+// /blog/<slug>/ URL as a blog post.
+exports.onCreatePage = ({ page, actions }) => {
+  if (!/^\/404/.test(page.path) || page.context?.notFound) return
+  actions.deletePage(page)
+  actions.createPage({ ...page, context: { ...page.context, notFound: true } })
+}
+
 exports.createSchemaCustomization = ({ actions }) => {
   actions.createTypes(`
     type MarkdownRemark implements Node {

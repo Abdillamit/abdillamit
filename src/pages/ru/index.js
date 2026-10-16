@@ -1,7 +1,6 @@
 import * as React from "react"
 import { graphql } from "gatsby"
 
-import Layout from "../../components/layout"
 import Seo from "../../components/seo"
 import AboutPage from "../../components/about-page"
 import { site } from "../../data/site"
@@ -11,9 +10,7 @@ import { postsFrom } from "../../data/posts"
 const lang = "ru"
 
 const AboutPageRu = ({ data }) => (
-  <Layout lang={lang} current="about" translations={pageRoutes.about}>
-    <AboutPage lang={lang} latestPost={postsFrom(data)[0]} />
-  </Layout>
+  <AboutPage lang={lang} latestPost={postsFrom(data)[0]} />
 )
 
 export const Head = () => (

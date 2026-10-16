@@ -1,61 +1,308 @@
 import * as React from "react"
 import { Link } from "gatsby"
+import {
+  AnimatePresence,
+  motion,
+  useMotionValueEvent,
+  useScroll,
+  useSpring,
+} from "motion/react"
 
 import { languages } from "../data/cv"
-import { site } from "../data/site"
+import { site, links } from "../data/site"
 import { pageRoutes } from "../data/routes"
+import { ease } from "./reveal"
 
 const sections = ["about", "resume", "blog"]
 
-// Site header: name, section links and the language switch.
-// `translations` maps each language to the same page in that language.
-const Header = ({ lang = "en", current, translations }) => {
-  const text = site[lang].nav
-  const other = translations || {
-    en: pageRoutes.about.en,
-    ru: pageRoutes.about.ru,
-  }
+// Spring for the section underline and the language pill.
+const slide = { type: "spring", stiffness: 420, damping: 36 }
+
+// Hides the header while the reader scrolls down and brings it back as
+// soon as they scroll up. Always visible near the top of the page.
+const useHideOnScroll = pathname => {
+  const { scrollY } = useScroll()
+  const [hidden, setHidden] = React.useState(false)
+
+  useMotionValueEvent(scrollY, "change", latest => {
+    const previous = scrollY.getPrevious() ?? 0
+    if (latest < 120 || latest < previous) setHidden(false)
+    else if (latest > previous) setHidden(true)
+  })
+
+  // A new page starts with the header in view
+  React.useEffect(() => setHidden(false), [pathname])
+
+  return [hidden, setHidden]
+}
+
+// Section links. A thick piece of the header rule sits under the current
+// section, follows the mouse or keyboard focus, and slides to the new
+// section after navigation (the layout stays mounted between pages).
+const SectionLinks = ({ lang, current, text }) => {
+  const [pointed, setPointed] = React.useState(null)
+  const marked = pointed || current
 
   return (
-    <header className="site-header">
-      <Link to={pageRoutes.about[lang]} className="brand">
-        Abdillamit Mamytov
-      </Link>
-      <nav aria-label={text.label} className="site-nav">
-        <ul className="nav-links">
-          {sections.map(section => (
-            <li key={section}>
-              <Link
-                to={pageRoutes[section][lang]}
-                aria-current={current === section ? "page" : undefined}
-              >
-                {text[section]}
-              </Link>
-            </li>
-          ))}
-        </ul>
-        <ul className="language-switch" aria-label={text.language}>
-          {languages.map(item => (
-            <li key={item.lang}>
-              {item.lang === lang ? (
-                <span aria-current="true" lang={item.lang}>
-                  {item.lang.toUpperCase()}
-                </span>
-              ) : (
+    <ul
+      className="nav-links"
+      onMouseLeave={() => setPointed(null)}
+      onBlur={event => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setPointed(null)
+      }}
+    >
+      {sections.map(section => (
+        <li key={section}>
+          <Link
+            to={pageRoutes[section][lang]}
+            aria-current={current === section ? "page" : undefined}
+            onMouseEnter={() => setPointed(section)}
+            onFocus={() => setPointed(section)}
+          >
+            {text[section]}
+          </Link>
+          {marked === section && (
+            <motion.span
+              layoutId="nav-underline"
+              className="nav-underline"
+              transition={slide}
+              aria-hidden="true"
+            />
+          )}
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+// EN | RU. A black pill marks the current language and slides across
+// when the reader switches; the letters invert over it.
+const LanguageSwitch = ({ lang, translations, label }) => (
+  <ul className="lang-switch" aria-label={label}>
+    {languages.map(item => {
+      const code = <span className="lang-code">{item.lang.toUpperCase()}</span>
+
+      return (
+        <li key={item.lang}>
+          {item.lang === lang ? (
+            <span className="lang-option" aria-current="true" lang={item.lang}>
+              <motion.span
+                layoutId="lang-pill"
+                className="lang-pill"
+                transition={slide}
+                aria-hidden="true"
+              />
+              {code}
+            </span>
+          ) : (
+            <Link
+              className="lang-option"
+              to={translations[item.lang] || item.path}
+              hrefLang={item.lang}
+              lang={item.lang}
+              title={item.name}
+            >
+              {code}
+            </Link>
+          )}
+        </li>
+      )
+    })}
+  </ul>
+)
+
+const menuList = {
+  closed: {},
+  open: { transition: { staggerChildren: 0.07, delayChildren: 0.15 } },
+}
+
+const menuLine = {
+  closed: { y: "110%" },
+  open: { y: "0%", transition: { duration: 0.7, ease } },
+}
+
+// Full-screen menu for small screens.
+const MobileMenu = ({ lang, current, text, onClose }) => {
+  const menuRef = React.useRef(null)
+
+  // Move focus into the menu when it opens
+  React.useEffect(() => {
+    menuRef.current?.querySelector("a")?.focus()
+  }, [])
+
+  return (
+    <motion.div
+      ref={menuRef}
+      id="site-menu"
+      className="site-menu"
+      initial={{ clipPath: "inset(0% 0% 100% 0%)" }}
+      animate={{ clipPath: "inset(0% 0% 0% 0%)" }}
+      exit={{
+        clipPath: "inset(0% 0% 100% 0%)",
+        transition: { duration: 0.35, ease },
+      }}
+      transition={{ duration: 0.55, ease }}
+    >
+      <nav aria-label={text.label}>
+        <motion.ul
+          className="site-menu__links"
+          variants={menuList}
+          initial="closed"
+          animate="open"
+        >
+          {sections.map((section, index) => (
+            <li key={section} className="site-menu__item">
+              <motion.span className="site-menu__line" variants={menuLine}>
                 <Link
-                  to={other[item.lang]}
-                  hrefLang={item.lang}
-                  lang={item.lang}
-                  title={item.name}
+                  to={pageRoutes[section][lang]}
+                  aria-current={current === section ? "page" : undefined}
+                  className="site-menu__link"
+                  onClick={onClose}
                 >
-                  {item.lang.toUpperCase()}
+                  <span className="site-menu__index" aria-hidden="true">
+                    0{index + 1}
+                  </span>
+                  <span className="site-menu__text">{text[section]}</span>
                 </Link>
-              )}
+              </motion.span>
             </li>
           ))}
-        </ul>
+        </motion.ul>
       </nav>
-    </header>
+      <motion.div
+        className="site-menu__contacts"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1, transition: { delay: 0.45, duration: 0.5 } }}
+      >
+        <p className="site-menu__label">{text.contacts}</p>
+        <a href={links.email}>{links.emailLabel}</a>
+        <a href={links.linkedin}>LinkedIn</a>
+        <a href={links.github}>GitHub</a>
+      </motion.div>
+    </motion.div>
+  )
+}
+
+// Thin bar at the top of the window that fills as a post is read.
+const ReadProgress = () => {
+  const { scrollYProgress } = useScroll()
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 200,
+    damping: 30,
+    restDelta: 0.001,
+  })
+
+  return (
+    <motion.div
+      className="read-progress"
+      style={{ scaleX }}
+      aria-hidden="true"
+    />
+  )
+}
+
+// Site header: monogram and name, section links, language switch and,
+// on small screens, a menu button.
+// `translations` maps each language to the same page in that language.
+const Header = ({
+  lang = "en",
+  current,
+  translations,
+  isPost = false,
+  pathname = "/",
+  menuOpen = false,
+  onMenuChange = () => {},
+}) => {
+  const text = site[lang].nav
+  const other = translations || pageRoutes.about
+  const [hidden, setHidden] = useHideOnScroll(pathname)
+  const buttonRef = React.useRef(null)
+
+  // Escape closes the menu; widening the window past the mobile
+  // breakpoint closes it too, so the page never stays locked.
+  React.useEffect(() => {
+    if (!menuOpen) return undefined
+
+    const onKeyDown = event => {
+      if (event.key !== "Escape") return
+      onMenuChange(false)
+      buttonRef.current?.focus()
+    }
+    const wide = window.matchMedia?.("(min-width: 46.0625rem)")
+    const onWide = event => event.matches && onMenuChange(false)
+
+    document.addEventListener("keydown", onKeyDown)
+    wide?.addEventListener?.("change", onWide)
+    return () => {
+      document.removeEventListener("keydown", onKeyDown)
+      wide?.removeEventListener?.("change", onWide)
+    }
+  }, [menuOpen, onMenuChange])
+
+  return (
+    <>
+      <motion.header
+        className="site-header"
+        initial={false}
+        animate={{ y: hidden && !menuOpen ? "-100%" : "0%" }}
+        transition={{ duration: 0.35, ease }}
+        onFocus={() => setHidden(false)}
+      >
+        <div className="wrap">
+          <div className="site-header__bar">
+            <Link to={pageRoutes.about[lang]} className="brand">
+              <span className="brand-mark" aria-hidden="true">
+                AM
+              </span>
+              <span className="brand-text">
+                <span className="brand-name">Abdillamit Mamytov</span>
+                <span className="brand-role">{text.role}</span>
+              </span>
+            </Link>
+
+            <nav aria-label={text.label} className="site-nav">
+              <SectionLinks lang={lang} current={current} text={text} />
+            </nav>
+
+            <LanguageSwitch
+              lang={lang}
+              translations={other}
+              label={text.language}
+            />
+
+            <button
+              ref={buttonRef}
+              type="button"
+              className="menu-button"
+              aria-expanded={menuOpen}
+              aria-controls={menuOpen ? "site-menu" : undefined}
+              onClick={() => onMenuChange(!menuOpen)}
+            >
+              <span className="menu-icon" aria-hidden="true">
+                <span />
+                <span />
+              </span>
+              <span className="visually-hidden">
+                {menuOpen ? text.close : text.menu}
+              </span>
+            </button>
+          </div>
+        </div>
+      </motion.header>
+
+      {isPost && <ReadProgress />}
+
+      <AnimatePresence>
+        {menuOpen && (
+          <MobileMenu
+            lang={lang}
+            current={current}
+            text={text}
+            onClose={() => onMenuChange(false)}
+          />
+        )}
+      </AnimatePresence>
+    </>
   )
 }
 

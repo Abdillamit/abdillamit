@@ -2,22 +2,6 @@ import React from "react"
 import { render, screen } from "@testing-library/react"
 import PostTemplate, { Head } from "../post"
 
-jest.mock("../../components/layout", () => {
-  return function MockLayout({ lang, current, translations, children }) {
-    return (
-      <div
-        data-testid="mock-layout"
-        data-lang={lang}
-        data-current={current}
-        data-en={translations?.en}
-        data-ru={translations?.ru}
-      >
-        {children}
-      </div>
-    )
-  }
-})
-
 jest.mock("../../components/seo", () => {
   return function MockSEO({
     title,
@@ -86,9 +70,6 @@ describe("Post template", () => {
       <PostTemplate data={data} pageContext={{ lang: "en", translations }} />
     )
 
-    const layout = screen.getByTestId("mock-layout")
-    expect(layout).toHaveAttribute("data-current", "blog")
-    expect(layout).toHaveAttribute("data-ru", translations.ru)
     expect(screen.getByRole("link", { name: "Русский" })).toHaveAttribute(
       "href",
       translations.ru
@@ -101,13 +82,9 @@ describe("Post template", () => {
     ).toHaveAttribute("href", "/")
   })
 
-  it("falls back to the blog page when there is no translation", () => {
+  it("skips the other language link when there is no translation", () => {
     render(<PostTemplate data={data} pageContext={{ lang: "ru" }} />)
 
-    expect(screen.getByTestId("mock-layout")).toHaveAttribute(
-      "data-ru",
-      "/ru/blog/"
-    )
     expect(screen.queryByText(/Также на/)).toBeNull()
     expect(
       screen.getAllByRole("link", { name: "Все записи" })[0]

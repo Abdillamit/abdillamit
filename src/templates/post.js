@@ -1,7 +1,6 @@
 import * as React from "react"
 import { Link, graphql } from "gatsby"
 
-import Layout from "../components/layout"
 import Seo from "../components/seo"
 import { site } from "../data/site"
 import { languages } from "../data/cv"
@@ -17,46 +16,40 @@ const PostTemplate = ({ data, pageContext }) => {
   )
 
   return (
-    <Layout
-      lang={lang}
-      current="blog"
-      translations={{ ...pageRoutes.blog, ...translations }}
-    >
-      <article className="post">
-        <p className="post-back">
-          <Link to={pageRoutes.blog[lang]}>{text.allPosts}</Link>
-        </p>
-        <h1 className="post-title">{post.frontmatter.title}</h1>
-        <p className="post-meta">
-          <time dateTime={date}>{formatLongDate(date, lang)}</time>
-          {post.readingTime ? (
-            <span>
-              {post.readingTime} {text.minRead}
-            </span>
-          ) : null}
-          {others.map(item => (
-            <span key={item.lang}>
-              {text.alsoIn}{" "}
-              <Link
-                to={translations[item.lang]}
-                lang={item.lang}
-                hrefLang={item.lang}
-              >
-                {item.name}
-              </Link>
-            </span>
-          ))}
-        </p>
-        <div
-          className="post-body"
-          dangerouslySetInnerHTML={{ __html: post.html }}
-        />
-        <nav className="post-footer" aria-label={text.allPosts}>
-          <Link to={pageRoutes.blog[lang]}>{text.allPosts}</Link>
-          <Link to={pageRoutes.about[lang]}>{text.aboutAuthor}</Link>
-        </nav>
-      </article>
-    </Layout>
+    <article className="post">
+      <p className="post-back">
+        <Link to={pageRoutes.blog[lang]}>{text.allPosts}</Link>
+      </p>
+      <h1 className="post-title">{post.frontmatter.title}</h1>
+      <p className="post-meta">
+        <time dateTime={date}>{formatLongDate(date, lang)}</time>
+        {post.readingTime ? (
+          <span>
+            {post.readingTime} {text.minRead}
+          </span>
+        ) : null}
+        {others.map(item => (
+          <span key={item.lang}>
+            {text.alsoIn}{" "}
+            <Link
+              to={translations[item.lang]}
+              lang={item.lang}
+              hrefLang={item.lang}
+            >
+              {item.name}
+            </Link>
+          </span>
+        ))}
+      </p>
+      <div
+        className="post-body"
+        dangerouslySetInnerHTML={{ __html: post.html }}
+      />
+      <nav className="post-footer" aria-label={text.allPosts}>
+        <Link to={pageRoutes.blog[lang]}>{text.allPosts}</Link>
+        <Link to={pageRoutes.about[lang]}>{text.aboutAuthor}</Link>
+      </nav>
+    </article>
   )
 }
 

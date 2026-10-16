@@ -1,6 +1,7 @@
 import * as React from "react"
 
 import Period from "./period"
+import Reveal from "./reveal"
 import { formatDay } from "./format-day"
 import { updated } from "../data/cv"
 import { site } from "../data/site"
@@ -17,12 +18,12 @@ const Items = ({ items }) => (
 
 // One resume section: title in the left column, content on the right.
 const Section = ({ id, title, children }) => (
-  <section className="split cv-section" aria-labelledby={id}>
+  <Reveal as="section" className="split cv-section" aria-labelledby={id}>
     <h2 id={id} className="section-title">
       {title}
     </h2>
     <div className="cv-section__body">{children}</div>
-  </section>
+  </Reveal>
 )
 
 const CvPage = ({ content }) => {
@@ -33,7 +34,11 @@ const CvPage = ({ content }) => {
     <article className="cv wrap">
       <header className="page-head">
         <div className="page-head__row">
-          <h1 className="page-title">{text.title}</h1>
+          <h1 className="page-title">
+            <span className="reveal-line">
+              <span>{text.title}</span>
+            </span>
+          </h1>
           <p className="page-meta">
             <span className="is-italic">
               {text.updated}{" "}

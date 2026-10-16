@@ -1,7 +1,6 @@
 import * as React from "react"
 import { graphql } from "gatsby"
 
-import Layout from "../components/layout"
 import Seo from "../components/seo"
 import BlogList from "../components/blog-list"
 import { site } from "../data/site"
@@ -11,9 +10,7 @@ import { postsFrom } from "../data/posts"
 const lang = "en"
 
 const BlogPageEn = ({ data }) => (
-  <Layout lang={lang} current="blog" translations={pageRoutes.blog}>
-    <BlogList lang={lang} posts={postsFrom(data)} />
-  </Layout>
+  <BlogList lang={lang} posts={postsFrom(data)} />
 )
 
 export const Head = () => (
