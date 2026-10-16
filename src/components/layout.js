@@ -1,8 +1,9 @@
 import * as React from "react"
-import { MotionConfig } from "motion/react"
+import { AnimatePresence, MotionConfig } from "motion/react"
 
 import Header from "./header"
 import Footer from "./footer"
+import Terminal from "./terminal"
 import "../styles/site.css"
 
 const skipLabel = { en: "Skip to content", ru: "Перейти к содержанию" }
@@ -18,7 +19,46 @@ const Layout = ({
   children,
 }) => {
   const [menuOpen, setMenuOpen] = React.useState(false)
+  const [terminalOpen, setTerminalOpen] = React.useState(false)
   const contentRef = React.useRef(null)
+  const focusBeforeTerminal = React.useRef(null)
+
+  const openTerminal = React.useCallback(() => {
+    focusBeforeTerminal.current = document.activeElement
+    setMenuOpen(false)
+    setTerminalOpen(true)
+  }, [])
+
+  const closeTerminal = React.useCallback(() => {
+    setTerminalOpen(false)
+    focusBeforeTerminal.current?.focus?.()
+  }, [])
+
+  // ~ (the key left of 1, in any layout) or Ctrl/Cmd+K opens the terminal
+  React.useEffect(() => {
+    const onKeyDown = event => {
+      if (event.key === "Escape" && terminalOpen) {
+        closeTerminal()
+        return
+      }
+      const typing = event.target.closest?.(
+        "input, textarea, select, [contenteditable='true']"
+      )
+      const backquote =
+        event.code === "Backquote" &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        !event.altKey &&
+        !typing
+      const commandK = (event.ctrlKey || event.metaKey) && event.code === "KeyK"
+      if (!backquote && !commandK) return
+      event.preventDefault()
+      if (terminalOpen) closeTerminal()
+      else openTerminal()
+    }
+    document.addEventListener("keydown", onKeyDown)
+    return () => document.removeEventListener("keydown", onKeyDown)
+  }, [terminalOpen, openTerminal, closeTerminal])
 
   // Close the menu after navigation
   React.useEffect(() => setMenuOpen(false), [pathname])
@@ -57,8 +97,19 @@ const Layout = ({
           >
             {children}
           </main>
-          <Footer lang={lang} />
+          <Footer lang={lang} onOpenTerminal={openTerminal} />
         </div>
+        <AnimatePresence>
+          {terminalOpen && (
+            <Terminal
+              lang={lang}
+              current={current}
+              translations={translations}
+              pathname={pathname}
+              onClose={closeTerminal}
+            />
+          )}
+        </AnimatePresence>
       </div>
     </MotionConfig>
   )

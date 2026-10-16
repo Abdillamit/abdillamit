@@ -93,6 +93,13 @@ export const site = {
           text: "lectures, workshops and code review for students.",
         },
       ],
+      figure: {
+        label: "Fig. 1.",
+        place: "Baul",
+        stylized:
+          "Mountains like the ones around Baul, where I grew up. The relief is stylized; drag it to turn it around.",
+        real: "Relief around Baul, Leylek District, 24 × 24 km. SRTM elevation data, contour lines every 100 m; drag to turn it around.",
+      },
       openResume: "Open the resume",
       blogTitle: "From the blog",
       allPosts: "All posts",
@@ -120,6 +127,8 @@ export const site = {
       colophonBefore:
         "This site is set in Computer Modern, like my LaTeX resume. I built it together with",
       colophonMiddle: ". The source code is on",
+      terminalBefore: "For the curious there is a terminal: press ~ or",
+      terminalButton: "open it",
       rights: "Bishkek",
     },
   },
@@ -215,6 +224,13 @@ export const site = {
           text: "лекции, воркшопы и code review для студентов.",
         },
       ],
+      figure: {
+        label: "Рис. 1.",
+        place: "Баул",
+        stylized:
+          "Горы, как вокруг Баула, где я вырос. Рельеф стилизованный; его можно покрутить.",
+        real: "Рельеф вокруг села Баул, Лейлекский район, 24 × 24 км. Данные высот SRTM, горизонтали через 100 м; рельеф можно покрутить.",
+      },
       openResume: "Открыть резюме",
       blogTitle: "Из блога",
       allPosts: "Все записи",
@@ -241,6 +257,8 @@ export const site = {
       colophonBefore:
         "Сайт набран шрифтом Computer Modern, как и моё резюме в LaTeX. Код сайта я написал вместе с",
       colophonMiddle: ". Исходники открыты на",
+      terminalBefore: "Для любопытных есть терминал: нажмите ~ или",
+      terminalButton: "откройте его",
       rights: "Бишкек",
     },
   },

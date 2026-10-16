@@ -30,11 +30,21 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "CMU Typewriter Text";
+  src: url("/fonts/cmuntt.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --ink: #000000;
   --paper: #ffffff;
   --font-serif: "CMU Serif", "Latin Modern Roman", "Computer Modern Serif",
     Georgia, "Times New Roman", serif;
+  --font-mono: "CMU Typewriter Text", "Latin Modern Mono", ui-monospace,
+    "SFMono-Regular", Menlo, Consolas, monospace;
 
   --wide: 62rem;
   --narrow: 39rem;
@@ -656,6 +666,63 @@ a.lang-option:hover .lang-code {
   margin: 0.75rem 0 0;
 }
 
+/* Fig. 1: the 3D relief (src/terrain/scene.js) */
+
+.terrain {
+  padding-bottom: 3.5rem;
+}
+
+.terrain-stage {
+  position: relative;
+  height: clamp(17rem, 42vw, 31rem);
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.terrain-stage.is-dragging {
+  cursor: grabbing;
+}
+
+.terrain-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1.4s var(--ease-out);
+}
+
+.terrain-stage.is-ready .terrain-canvas {
+  opacity: 1;
+}
+
+.terrain-marker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0.05rem 0.45rem 0.15rem;
+  border: var(--rule);
+  background: var(--paper);
+  font-size: 0.85rem;
+  font-variant-caps: small-caps;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.terrain-caption {
+  max-width: 40rem;
+  margin: 1rem auto 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.terrain-caption__label {
+  font-variant-caps: small-caps;
+}
+
 /* Page heads: Resume and Blog */
 
 .page-head {
@@ -963,6 +1030,139 @@ a.lang-option:hover .lang-code {
   font-size: 0.875rem;
 }
 
+/* Terminal: a black panel at the bottom, set in CMU Typewriter */
+
+.terminal {
+  position: fixed;
+  right: 0;
+  bottom: 1rem;
+  left: 0;
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  width: min(46rem, calc(100% - 2rem));
+  height: min(24rem, 70vh);
+  margin: 0 auto;
+  background: var(--ink);
+  color: var(--paper);
+  box-shadow: 0 1.25rem 3rem rgba(0, 0, 0, 0.28);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.terminal ::selection {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.terminal__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.25rem 0.4rem 0.25rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+}
+
+.terminal__close {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.terminal__close:hover {
+  color: var(--paper);
+}
+
+.terminal__close:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: -4px;
+}
+
+.terminal__output {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.75rem 1rem 1rem;
+  overscroll-behavior: contain;
+}
+
+.terminal__line {
+  min-height: 1.5em;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.terminal__line.is-muted {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.terminal__line.is-error {
+  font-style: italic;
+}
+
+.terminal__line.is-art {
+  line-height: 1.15;
+  overflow-wrap: normal;
+}
+
+.terminal__form {
+  display: flex;
+  gap: 0.6em;
+}
+
+.terminal__prompt {
+  flex: none;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.terminal__input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  caret-color: var(--paper);
+}
+
+/* A button that looks like a link, for "open the terminal" */
+.link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  cursor: pointer;
+}
+
+.link-button:hover {
+  text-decoration-thickness: 2px;
+}
+
+.link-button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.colophon--terminal {
+  margin-top: 0.85rem;
+}
+
 /* Small screens */
 
 @media (max-width: 46rem) {
@@ -1017,6 +1217,13 @@ a.lang-option:hover .lang-code {
 
   .lang-option {
     padding: 0.25rem 0.45rem;
+  }
+
+  .terminal {
+    bottom: 0;
+    width: 100%;
+    height: 62vh;
+    font-size: 0.8rem;
   }
 
   .timeline-mark {
@@ -1092,6 +1299,8 @@ a.lang-option:hover .lang-code {
   .site-header,
   .site-footer,
   .site-menu,
+  .terrain,
+  .terminal,
   .read-progress,
   .skip-link,
   .page-meta {

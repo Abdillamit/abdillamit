@@ -3,6 +3,7 @@ import { Link } from "gatsby"
 import { motion, useScroll } from "motion/react"
 
 import Reveal from "./reveal"
+import TerrainFigure from "./terrain-figure"
 import { site, links } from "../data/site"
 import { pageRoutes, postPath, formatLongDate } from "../data/routes"
 
@@ -78,6 +79,8 @@ const AboutPage = ({ lang = "en", latestPost }) => {
           </li>
         </ul>
       </section>
+
+      <TerrainFigure lang={lang} />
 
       <section className="wrap" aria-labelledby="journey">
         <div className="split">

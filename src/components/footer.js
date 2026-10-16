@@ -3,7 +3,7 @@ import * as React from "react"
 import { site, links } from "../data/site"
 
 // Black "colophon" block at the bottom of every page.
-const Footer = ({ lang = "en" }) => {
+const Footer = ({ lang = "en", onOpenTerminal }) => {
   const text = site[lang].footer
 
   return (
@@ -15,6 +15,18 @@ const Footer = ({ lang = "en" }) => {
             {text.colophonBefore} <a href={links.claudeCode}>Claude Code</a>
             {text.colophonMiddle} <a href={links.source}>GitHub</a>.
           </p>
+          {onOpenTerminal && (
+            <p className="colophon colophon--terminal">
+              {text.terminalBefore}{" "}
+              <button
+                type="button"
+                className="link-button"
+                onClick={onOpenTerminal}
+              >
+                {text.terminalButton}
+              </button>
+            </p>
+          )}
         </div>
         <div className="footer-contacts">
           <a href={links.email}>{links.emailLabel}</a>
