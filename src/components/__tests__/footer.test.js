@@ -43,4 +43,15 @@ describe("Footer component", () => {
     expect(footer).toHaveTextContent("Код сайта я написал вместе с Claude Code")
     expect(footer).toHaveTextContent("Бишкек")
   })
+
+  it("offers the terminal only when the layout can open it", () => {
+    const onOpenTerminal = jest.fn()
+    const { rerender } = render(<Footer lang="en" />)
+    expect(screen.queryByRole("button", { name: "open it" })).toBeNull()
+
+    rerender(<Footer lang="ru" onOpenTerminal={onOpenTerminal} />)
+    screen.getByRole("button", { name: "откройте его" }).click()
+    expect(onOpenTerminal).toHaveBeenCalled()
+    expect(screen.getByText(/нажмите ~ или/)).toBeInTheDocument()
+  })
 })

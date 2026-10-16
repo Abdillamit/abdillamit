@@ -1,5 +1,5 @@
 import React from "react"
-import { fireEvent, render, screen } from "@testing-library/react"
+import { fireEvent, render, screen, waitFor } from "@testing-library/react"
 import Layout from "../layout"
 
 describe("Layout component", () => {
@@ -79,5 +79,40 @@ describe("Layout component", () => {
     )
     expect(content.inert).toBe(false)
     expect(document.documentElement).not.toHaveClass("has-menu-open")
+  })
+
+  it("opens and closes the terminal from the keyboard and the footer", async () => {
+    render(
+      <Layout lang="en" pathname="/">
+        <input aria-label="Search" />
+      </Layout>
+    )
+    const terminal = () => screen.queryByRole("dialog", { name: "Terminal" })
+    const closed = () => waitFor(() => expect(terminal()).toBeNull())
+
+    fireEvent.keyDown(document.body, { code: "Backquote", key: "`" })
+    expect(terminal()).not.toBeNull()
+    fireEvent.keyDown(document.body, { code: "Escape", key: "Escape" })
+    await closed()
+
+    fireEvent.keyDown(document.body, { code: "KeyK", key: "k", ctrlKey: true })
+    expect(terminal()).not.toBeNull()
+    fireEvent.keyDown(document.body, { code: "KeyK", key: "k", ctrlKey: true })
+    await closed()
+
+    // ~ typed into a text field stays in the field
+    fireEvent.keyDown(screen.getByLabelText("Search"), {
+      code: "Backquote",
+      key: "`",
+    })
+    expect(terminal()).toBeNull()
+
+    const button = screen.getByRole("button", { name: "open it" })
+    button.focus()
+    fireEvent.click(button)
+    expect(terminal()).not.toBeNull()
+    fireEvent.click(screen.getByRole("button", { name: "Close the terminal" }))
+    await closed()
+    expect(document.activeElement).toBe(button)
   })
 })
