@@ -9,6 +9,10 @@ export const site = {
       resume: "Resume",
       blog: "Blog",
       language: "Language",
+      role: "Full Stack Engineer · Bishkek",
+      menu: "Menu",
+      close: "Close",
+      contacts: "Contacts",
     },
     meta: {
       about: {
@@ -127,6 +131,10 @@ export const site = {
       resume: "Резюме",
       blog: "Блог",
       language: "Язык",
+      role: "Full Stack разработчик · Бишкек",
+      menu: "Меню",
+      close: "Закрыть",
+      contacts: "Контакты",
     },
     meta: {
       about: {

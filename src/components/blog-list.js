@@ -1,6 +1,7 @@
 import * as React from "react"
 import { Link } from "gatsby"
 
+import Reveal from "./reveal"
 import { site, links } from "../data/site"
 import { postPath, formatLongDate } from "../data/routes"
 
@@ -20,12 +21,17 @@ const BlogList = ({ lang = "en", posts = [] }) => {
   return (
     <div className="wrap blog">
       <header className="page-head">
-        <h1 className="page-title">{text.title}</h1>
+        <h1 className="page-title">
+          <span className="reveal-line">
+            <span>{text.title}</span>
+          </span>
+        </h1>
         <p className="page-lede">{text.intro}</p>
       </header>
 
       {groupByYear(posts).map(group => (
-        <section
+        <Reveal
+          as="section"
           key={group.year}
           className="split blog-year"
           aria-labelledby={`year-${group.year}`}
@@ -51,17 +57,21 @@ const BlogList = ({ lang = "en", posts = [] }) => {
               </article>
             ))}
           </div>
-        </section>
+        </Reveal>
       ))}
 
-      <section className="split blog-next" aria-labelledby="blog-next">
+      <Reveal
+        as="section"
+        className="split blog-next"
+        aria-labelledby="blog-next"
+      >
         <h2 id="blog-next" className="section-title">
           {text.nextTitle}
         </h2>
         <p>
           {text.next} <a href={links.linkedin}>LinkedIn</a>.
         </p>
-      </section>
+      </Reveal>
     </div>
   )
 }
