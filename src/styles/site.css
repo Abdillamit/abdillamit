@@ -466,14 +466,23 @@ a.lang-option:hover .lang-code {
 
 /* About */
 
+/* The hero sits on a spring sky that fades into the white page */
+.hero-sky {
+  background: linear-gradient(#cfe8ff 0%, #e8f4ff 52%, #fff 100%);
+}
+
 .hero {
-  padding-top: 5rem;
-  padding-bottom: 4rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: 1rem 2.5rem;
+  padding-top: 3.5rem;
+  padding-bottom: 3rem;
 }
 
 .hero-name {
   margin: 0;
-  font-size: clamp(3.3rem, 11vw, 8.25rem);
+  font-size: clamp(3.1rem, 6.1vw, 5.6rem);
   font-weight: 400;
   font-variant-caps: small-caps;
   line-height: 0.92;
@@ -530,6 +539,15 @@ a.lang-option:hover .lang-code {
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
@@ -666,61 +684,80 @@ a.lang-option:hover .lang-code {
   margin: 0.75rem 0 0;
 }
 
-/* Fig. 1: the 3D relief (src/terrain/scene.js) */
+/* Baul in 3D (src/diorama/scene.js), with a still picture underneath */
 
-.terrain {
-  padding-bottom: 3.5rem;
-}
-
-.terrain-stage {
+.hero-diorama {
   position: relative;
-  height: clamp(17rem, 42vw, 31rem);
+  aspect-ratio: 1.1;
   cursor: grab;
   touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
 }
 
-.terrain-stage.is-dragging {
+.diorama-canvas.is-dragging {
   cursor: grabbing;
 }
 
-.terrain-canvas {
+.hero-diorama__poster,
+.diorama-canvas {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transition: opacity 1.4s var(--ease-out);
+  width: 100% !important;
+  height: 100% !important;
 }
 
-.terrain-stage.is-ready .terrain-canvas {
+.hero-diorama__poster {
+  object-fit: contain;
+  transition: opacity 0.9s var(--ease-out);
+  animation: fade-up 1.1s var(--ease-out) 0.2s both;
+}
+
+.hero-diorama.is-live .hero-diorama__poster {
+  opacity: 0;
+}
+
+.diorama-canvas {
+  opacity: 0;
+  transition: opacity 0.9s var(--ease-out);
+}
+
+.hero-diorama.is-live .diorama-canvas {
   opacity: 1;
 }
 
-.terrain-marker {
+/* The label over the village; the live scene moves it with the island */
+.hero-diorama__pin {
   position: absolute;
-  top: 0;
-  left: 0;
-  padding: 0.05rem 0.45rem 0.15rem;
+  z-index: 1;
+  top: 52.1%;
+  left: 51.5%;
+  transform: translate(-50%, calc(-100% - 1.6rem));
+  padding: 0.1rem 0.55rem 0.2rem;
   border: var(--rule);
   background: var(--paper);
   font-size: 0.85rem;
   font-variant-caps: small-caps;
   white-space: nowrap;
   pointer-events: none;
+  /* opacity only: the live scene moves the pin with transform */
+  animation: fade-in 0.9s var(--ease-out) 0.6s both;
 }
 
-.terrain-caption {
-  max-width: 40rem;
-  margin: 1rem auto 0;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  text-align: center;
+.hero-diorama__pin small {
+  font-size: 0.8em;
+  font-style: italic;
+  font-variant-caps: normal;
 }
 
-.terrain-caption__label {
-  font-variant-caps: small-caps;
+.hero-diorama__pin::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 1px;
+  height: 1.6rem;
+  background: var(--ink);
 }
 
 /* Page heads: Resume and Blog */
@@ -1235,8 +1272,13 @@ a.lang-option:hover .lang-code {
   }
 
   .hero {
-    padding-top: 3rem;
-    padding-bottom: 2.5rem;
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 2.5rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .hero-diorama {
+    margin: 0 calc(var(--gutter) * -0.5);
   }
 
   .entry-head {
@@ -1299,7 +1341,7 @@ a.lang-option:hover .lang-code {
   .site-header,
   .site-footer,
   .site-menu,
-  .terrain,
+  .hero-diorama,
   .terminal,
   .read-progress,
   .skip-link,

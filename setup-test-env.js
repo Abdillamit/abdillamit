@@ -12,3 +12,7 @@ class MockIntersectionObserver {
 }
 
 global.IntersectionObserver = MockIntersectionObserver
+
+// jsdom has no canvas either: without a WebGL context the home page
+// keeps the still picture of the diorama, which is what tests check.
+HTMLCanvasElement.prototype.getContext = () => null

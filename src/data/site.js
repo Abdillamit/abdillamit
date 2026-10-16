@@ -93,12 +93,11 @@ export const site = {
           text: "lectures, workshops and code review for students.",
         },
       ],
-      figure: {
-        label: "Fig. 1.",
+      diorama: {
+        label:
+          "A 3D model of Baul, the village where I grew up: houses between two rivers, apricot trees in bloom, sheep on the pasture, the Turkestan Range behind, and a boy with a laptop on the hill.",
         place: "Baul",
-        stylized:
-          "Mountains like the ones around Baul, where I grew up. The relief is stylized; drag it to turn it around.",
-        real: "Relief around Baul, Leylek District, 24 × 24 km. SRTM elevation data, contour lines every 100 m; drag to turn it around.",
+        district: "Leylek",
       },
       openResume: "Open the resume",
       blogTitle: "From the blog",
@@ -224,12 +223,11 @@ export const site = {
           text: "лекции, воркшопы и code review для студентов.",
         },
       ],
-      figure: {
-        label: "Рис. 1.",
+      diorama: {
+        label:
+          "3D-модель Баула, села, где я вырос: дома между двух рек, цветущие абрикосы, овцы на пастбище, Туркестанский хребет и мальчик с ноутбуком на холме.",
         place: "Баул",
-        stylized:
-          "Горы, как вокруг Баула, где я вырос. Рельеф стилизованный; его можно покрутить.",
-        real: "Рельеф вокруг села Баул, Лейлекский район, 24 × 24 км. Данные высот SRTM, горизонтали через 100 м; рельеф можно покрутить.",
+        district: "Лейлек",
       },
       openResume: "Открыть резюме",
       blogTitle: "Из блога",
