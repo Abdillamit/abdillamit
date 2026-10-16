@@ -3,7 +3,7 @@ import { Link } from "gatsby"
 import { motion, useScroll } from "motion/react"
 
 import Reveal from "./reveal"
-import TerrainFigure from "./terrain-figure"
+import HeroDiorama from "./hero-diorama"
 import { site, links } from "../data/site"
 import { pageRoutes, postPath, formatLongDate } from "../data/routes"
 
@@ -53,34 +53,37 @@ const AboutPage = ({ lang = "en", latestPost }) => {
 
   return (
     <>
-      <section className="hero wrap">
-        {/* Each line rises from behind a mask on load (CSS in site.css) */}
-        <h1 className="hero-name">
-          <span className="reveal-line">
-            <span>{firstName}</span>
-          </span>{" "}
-          <span className="reveal-line">
-            <span>{lastName}</span>
-          </span>
-        </h1>
-        <p className="hero-lede">{text.lede}</p>
-        <ul className="hero-links">
-          <li>
-            <a href={links.github}>{text.links.github}</a>
-          </li>
-          <li>
-            <a href={links.linkedin}>{text.links.linkedin}</a>
-          </li>
-          <li>
-            <a href={links.email}>{text.links.email}</a>
-          </li>
-          <li>
-            <Link to={pageRoutes.resume[lang]}>{text.links.resume}</Link>
-          </li>
-        </ul>
-      </section>
-
-      <TerrainFigure lang={lang} />
+      <div className="hero-sky">
+        <section className="hero wrap">
+          <div className="hero-copy">
+            {/* Each line rises from behind a mask on load (CSS in site.css) */}
+            <h1 className="hero-name">
+              <span className="reveal-line">
+                <span>{firstName}</span>
+              </span>{" "}
+              <span className="reveal-line">
+                <span>{lastName}</span>
+              </span>
+            </h1>
+            <p className="hero-lede">{text.lede}</p>
+            <ul className="hero-links">
+              <li>
+                <a href={links.github}>{text.links.github}</a>
+              </li>
+              <li>
+                <a href={links.linkedin}>{text.links.linkedin}</a>
+              </li>
+              <li>
+                <a href={links.email}>{text.links.email}</a>
+              </li>
+              <li>
+                <Link to={pageRoutes.resume[lang]}>{text.links.resume}</Link>
+              </li>
+            </ul>
+          </div>
+          <HeroDiorama lang={lang} />
+        </section>
+      </div>
 
       <section className="wrap" aria-labelledby="journey">
         <div className="split">

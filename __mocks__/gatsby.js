@@ -5,6 +5,7 @@ module.exports = {
   ...gatsby,
   graphql: jest.fn(),
   navigate: jest.fn(),
+  withPrefix: path => path,
   Link: jest.fn().mockImplementation(
     // these props are invalid for an `a` tag
     ({ to, ...rest }) =>
