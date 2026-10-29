@@ -8,13 +8,24 @@ const desktopNav = name =>
     .find(nav => nav.classList.contains("site-nav"))
 
 describe("Header component", () => {
-  it("shows the monogram, name and role, linked to the home page", () => {
+  it("shows the mark, name and role, linked to the home page", () => {
     render(<Header lang="en" current="resume" />)
 
     const brand = screen.getByRole("link", { name: /Abdillamit Mamytov/ })
     expect(brand).toHaveAttribute("href", "/")
     expect(brand).toHaveTextContent("Full Stack Engineer · Bishkek")
-    expect(within(brand).getByText("AM")).toHaveAttribute("aria-hidden", "true")
+    const mark = brand.querySelector(".brand-mark")
+    expect(mark).toHaveAttribute("aria-hidden", "true")
+    expect(mark.querySelector("svg")).not.toBeNull()
+  })
+
+  it("links GitHub with an icon", () => {
+    render(<Header lang="ru" />)
+
+    expect(screen.getByRole("link", { name: "GitHub" })).toHaveAttribute(
+      "href",
+      "https://github.com/Abdillamit"
+    )
   })
 
   it("links every section and marks the current one", () => {

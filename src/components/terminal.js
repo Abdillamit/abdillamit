@@ -5,7 +5,7 @@ import { motion } from "motion/react"
 import { ease } from "./reveal"
 import { banner, complete, promptFor, runCommand } from "../terminal/commands"
 
-const Line = ({ line }) => (
+export const Line = ({ line }) => (
   <div className={`terminal__line is-${line.kind}`}>
     {line.kind === "input" ? (
       <>
@@ -30,7 +30,7 @@ const Line = ({ line }) => (
   </div>
 )
 
-const runAction = (action, onClose) => {
+export const runAction = (action, onClose = () => {}) => {
   if (!action) return
   if (action.type === "navigate") navigate(action.to)
   if (action.type === "close") onClose()
@@ -52,9 +52,13 @@ const Terminal = ({
   current,
   translations,
   pathname,
+  initialLines = [],
   onClose,
 }) => {
-  const [lines, setLines] = React.useState(() => banner(lang))
+  const [lines, setLines] = React.useState(() => [
+    ...banner(lang),
+    ...initialLines,
+  ])
   const [value, setValue] = React.useState("")
   const [history, setHistory] = React.useState([])
   const [historyIndex, setHistoryIndex] = React.useState(-1)

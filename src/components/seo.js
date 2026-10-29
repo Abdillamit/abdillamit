@@ -60,7 +60,11 @@ function Seo({
       )}
       <link
         rel="preload"
-        href="/fonts/cmunrm.woff2"
+        href={
+          lang === "ru"
+            ? "/fonts/onest-cyrillic.woff2"
+            : "/fonts/onest-latin.woff2"
+        }
         as="font"
         type="font/woff2"
         crossOrigin="anonymous"

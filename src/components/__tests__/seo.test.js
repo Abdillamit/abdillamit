@@ -116,12 +116,13 @@ describe("SEO component", () => {
     )
   })
 
-  it("preloads the main font", () => {
-    const { container } = render(<Seo title="T" />)
-    expect(container.querySelector("link[rel='preload']")).toHaveAttribute(
-      "href",
-      "/fonts/cmunrm.woff2"
-    )
+  it("preloads the main font for the page language", () => {
+    const { container, rerender } = render(<Seo title="T" />)
+    const preload = () => container.querySelector("link[rel='preload']")
+    expect(preload()).toHaveAttribute("href", "/fonts/onest-latin.woff2")
+
+    rerender(<Seo title="T" lang="ru" />)
+    expect(preload()).toHaveAttribute("href", "/fonts/onest-cyrillic.woff2")
   })
 
   it("skips URL tags when siteUrl is missing", () => {
