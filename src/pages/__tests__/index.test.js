@@ -50,7 +50,7 @@ const pages = [
     lang: "en",
     path: "/",
     ru: "/ru/",
-    heading: { level: 1, name: "Abdillamit Mamytov" },
+    heading: { level: 1, name: /From a mountain village/ },
   },
   {
     name: "Russian About",
@@ -59,7 +59,7 @@ const pages = [
     lang: "ru",
     path: "/ru/",
     ru: "/ru/",
-    heading: { level: 2, name: "Путь" },
+    heading: { level: 1, name: /Из горного села/ },
   },
   {
     name: "English Resume",

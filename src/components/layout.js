@@ -4,6 +4,7 @@ import { AnimatePresence, MotionConfig } from "motion/react"
 import Header from "./header"
 import Footer from "./footer"
 import Terminal from "./terminal"
+import { TerminalContext } from "./terminal-context"
 import "../styles/site.css"
 
 const skipLabel = { en: "Skip to content", ru: "Перейти к содержанию" }
@@ -20,14 +21,19 @@ const Layout = ({
 }) => {
   const [menuOpen, setMenuOpen] = React.useState(false)
   const [terminalOpen, setTerminalOpen] = React.useState(false)
+  const [terminalSeed, setTerminalSeed] = React.useState([])
   const contentRef = React.useRef(null)
   const focusBeforeTerminal = React.useRef(null)
 
-  const openTerminal = React.useCallback(() => {
+  // `seed`: lines from the home-page terminal to continue from
+  const openTerminal = React.useCallback(seed => {
     focusBeforeTerminal.current = document.activeElement
+    setTerminalSeed(Array.isArray(seed) ? seed : [])
     setMenuOpen(false)
     setTerminalOpen(true)
   }, [])
+
+  const terminal = React.useMemo(() => ({ open: openTerminal }), [openTerminal])
 
   const closeTerminal = React.useCallback(() => {
     setTerminalOpen(false)
@@ -54,7 +60,7 @@ const Layout = ({
       if (!backquote && !commandK) return
       event.preventDefault()
       if (terminalOpen) closeTerminal()
-      else openTerminal()
+      else openTerminal([])
     }
     document.addEventListener("keydown", onKeyDown)
     return () => document.removeEventListener("keydown", onKeyDown)
@@ -74,43 +80,46 @@ const Layout = ({
   return (
     // "user": skip movement for people who ask their system for less
     <MotionConfig reducedMotion="user">
-      <div className="page">
-        <a className="skip-link" href="#content">
-          {skipLabel[lang] || skipLabel.en}
-        </a>
-        <Header
-          lang={lang}
-          current={current}
-          translations={translations}
-          isPost={isPost}
-          pathname={pathname}
-          menuOpen={menuOpen}
-          onMenuChange={setMenuOpen}
-        />
-        <div className="page-content" ref={contentRef}>
-          {/* The key restarts the page-in animation on every page */}
-          <main
-            id="content"
-            key={pathname}
-            className="page-main"
-            data-testid="content-wrapper"
-          >
-            {children}
-          </main>
-          <Footer lang={lang} onOpenTerminal={openTerminal} />
+      <TerminalContext.Provider value={terminal}>
+        <div className="page">
+          <a className="skip-link" href="#content">
+            {skipLabel[lang] || skipLabel.en}
+          </a>
+          <Header
+            lang={lang}
+            current={current}
+            translations={translations}
+            isPost={isPost}
+            pathname={pathname}
+            menuOpen={menuOpen}
+            onMenuChange={setMenuOpen}
+          />
+          <div className="page-content" ref={contentRef}>
+            {/* The key restarts the page-in animation on every page */}
+            <main
+              id="content"
+              key={pathname}
+              className="page-main"
+              data-testid="content-wrapper"
+            >
+              {children}
+            </main>
+            <Footer lang={lang} onOpenTerminal={() => openTerminal([])} />
+          </div>
+          <AnimatePresence>
+            {terminalOpen && (
+              <Terminal
+                lang={lang}
+                current={current}
+                translations={translations}
+                pathname={pathname}
+                initialLines={terminalSeed}
+                onClose={closeTerminal}
+              />
+            )}
+          </AnimatePresence>
         </div>
-        <AnimatePresence>
-          {terminalOpen && (
-            <Terminal
-              lang={lang}
-              current={current}
-              translations={translations}
-              pathname={pathname}
-              onClose={closeTerminal}
-            />
-          )}
-        </AnimatePresence>
-      </div>
+      </TerminalContext.Provider>
     </MotionConfig>
   )
 }

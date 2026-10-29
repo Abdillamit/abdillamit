@@ -16,8 +16,7 @@
     "gatsby-transformer-sharp": "^5.14.0",
     "motion": "^12.43.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "three": "^0.186.1"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.0",

@@ -15,6 +15,34 @@ import { ease } from "./reveal"
 
 const sections = ["about", "resume", "blog"]
 
+// Two peaks of the Turkestan Range, the mark next to the name
+export const Peaks = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+    <path
+      d="M2 19 L9 6.5 L13 13 L16 8.5 L22 19 Z"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinejoin="round"
+    />
+  </svg>
+)
+
+const GitHubIcon = () => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21" />
+  </svg>
+)
+
 // Spring for the section underline and the language pill.
 const slide = { type: "spring", stiffness: 420, damping: 36 }
 
@@ -75,8 +103,8 @@ const SectionLinks = ({ lang, current, text }) => {
   )
 }
 
-// EN | RU. A black pill marks the current language and slides across
-// when the reader switches; the letters invert over it.
+// EN | RU. A pill marks the current language and slides across when the
+// reader switches.
 const LanguageSwitch = ({ lang, translations, label }) => (
   <ul className="lang-switch" aria-label={label}>
     {languages.map(item => {
@@ -201,8 +229,8 @@ const ReadProgress = () => {
   )
 }
 
-// Site header: monogram and name, section links, language switch and,
-// on small screens, a menu button.
+// Site header: mark and name, section links, language switch, GitHub
+// and, on small screens, a menu button.
 // `translations` maps each language to the same page in that language.
 const Header = ({
   lang = "en",
@@ -252,7 +280,7 @@ const Header = ({
           <div className="site-header__bar">
             <Link to={pageRoutes.about[lang]} className="brand">
               <span className="brand-mark" aria-hidden="true">
-                AM
+                <Peaks />
               </span>
               <span className="brand-text">
                 <span className="brand-name">Abdillamit Mamytov</span>
@@ -269,6 +297,15 @@ const Header = ({
               translations={other}
               label={text.language}
             />
+
+            <a
+              className="header-icon"
+              href={links.github}
+              aria-label={text.github}
+              title={text.github}
+            >
+              <GitHubIcon />
+            </a>
 
             <button
               ref={buttonRef}
