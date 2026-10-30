@@ -1,9 +1,11 @@
 // FaultyTerminal background from React Bits by David Haz (https://reactbits.dev),
 // copied from github.com/DavidHDev/react-bits (commit e12c221) without
-// changes, except that its CSS lives in src/styles/site.css.
+// changes, except that it imports React (the lint in `gatsby develop`
+// wants React in scope for JSX) and its CSS lives in src/styles/site.css.
 // License: MIT + Commons Clause, see LICENSE.md next to this file.
 
-import { useEffect, useRef } from 'react';
+// eslint-disable-next-line no-unused-vars -- used by the classic JSX transform
+import React, { useEffect, useRef } from 'react';
 
 const INTRO_SECONDS = 2;
 const MAX_CLICKS = 4;
