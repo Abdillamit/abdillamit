@@ -72,6 +72,9 @@ const SectionLinks = ({ lang, current, text }) => {
   const marked = pointed || current
 
   return (
+    // The list only listens for the pointer and focus leaving it, to put
+    // the underline back; the links inside stay the interactive elements.
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <ul
       className="nav-links"
       onMouseLeave={() => setPointed(null)}
